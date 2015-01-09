@@ -7,6 +7,7 @@ module.exports = function(app) {
         email: { type: String, index: { unique: true, dropDups: true } },
         salt: String,
         hash: String,
+        state: Number,
         points: [{ type: Schema.Types.ObjectId, ref: 'Point' }]
     });
 
