@@ -7,7 +7,6 @@ var fs = require('fs')
   , path = require('path')
   , mongoose = require('mongoose')
   , express = require('express')
-  , routes = require('./routes')
   , hash = require('./lib/hash').hash;
 
 mongoose.connect('mongodb://localhost/chaosups');
@@ -22,6 +21,26 @@ fs.readdir(modelsDir, function(err, files) {
     });
 });
 
+// Load controllers
+app.controllers = {};
+var controllersDir = path.join(__dirname, 'controllers');
+fs.readdir(controllersDir, function(err, files) {
+    files.forEach(function(controller) {
+        console.log(controller);
+        require(path.join(controllersDir, controller))(app);
+    });
+});
+
+// Load libraries
+app.libs = {};
+var libsDir = path.join(__dirname, 'lib');
+fs.readdir(libsDir, function(err, files) {
+    files.forEach(function(lib) {
+        console.log(lib);
+        require(path.join(libsDir, lib))(app);
+    });
+});
+
 // Configuration
 app.configure(function(){
   app.set('views', __dirname + '/views');
@@ -30,7 +49,7 @@ app.configure(function(){
   app.use(express.cookieParser('shhhhh, 1234 secrets inside'));
   app.use(express.session({secret: 'shhhhh, 1234 secrets inside'}));
   app.use(express.methodOverride());
-app.use(express.compiler({ src : __dirname + '/public', enable: ['less']}));
+  app.use(express.compiler({ src : __dirname + '/public', enable: ['less']}));
   app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 });
@@ -66,52 +85,6 @@ express.compiler.compilers.less.compile = function(str, fn){
   } catch (err) {fn(err);}
 }
 
-var users = {
-    jay: { name: 'jay' }
-}
-
-hash('foobar', function(err, salt, hash) {
-    if (err) throw err;
-
-    users.jay.salt = salt;
-    users.jay.hash = hash.toString();
-});
-
-app.authenticate = function(name, pass, fn) {
-    if (!module.parent) console.log('authenticating %s:%s', name, pass);
-    var user = users[name];
-    
-    if (!user) return fn(new Error('cannot find user'));
-    
-    hash(pass, user.salt, function(err, hash) {
-        if (err) return fn(err);
-        if (hash.toString() == user.hash) return fn(null, user);
-        fn(new Error('invalid password'));
-    });
-}
-
-function restrict(req, res, next) {
-    if (req.session.user) {
-        next();
-    } else {
-        req.session.error = 'Access denied!';
-        res.redirect('/login');
-    }
-}
-
-// Routes
-app.get('/', routes.index);
-app.get('/login', routes.login);
-app.post('/login', routes.login_post(app));
-app.get('/restricted', restrict, function(req, res) {
-    res.send('Wahoo! restricted area. click to <a href="/logout">logout</a>');
-});
-
-app.get('/logout', function(req, res) {
-    req.session.destroy(function() {
-        res.redirect('/');
-    });
-});
 app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
