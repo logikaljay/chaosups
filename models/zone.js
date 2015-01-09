@@ -4,7 +4,7 @@ module.exports = function(app) {
     var Schema = mongoose.Schema;
     var zoneSchema = new Schema({
         name: String,
-        amount: Number
+        days: [{ type: Schema.Types.ObjectId, ref: 'Day' }]
     });
 
     app.models.zone = zoneSchema;
