@@ -1,0 +1,13 @@
+var mongoose = require('mongoose');
+
+module.exports = function(app) {
+    var Schema = mongoose.Schema;
+    var userSchema = new Schema({
+        type: Number,
+        email: { type: String, index: { unique: true, dropDups: true } },
+        salt: String,
+        hash: String
+    });
+
+    app.models.user = userSchema;
+};

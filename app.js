@@ -3,14 +3,26 @@
  * Module dependencies.
  */
 
-var express = require('express')
+var fs = require('fs')
+  , path = require('path')
+  , mongoose = require('mongoose')
+  , express = require('express')
   , routes = require('./routes')
   , hash = require('./lib/hash').hash;
 
+mongoose.connect('mongodb://localhost/chaosups');
 var app = module.exports = express.createServer();
 
-// Configuration
+// Load models
+app.models = {};
+var modelsDir = path.join(__dirname, 'models');
+fs.readdir(modelsDir, function(err, files) {
+    files.forEach(function(model) {
+        require(path.join(__dirname, 'models', model))(app);
+    });
+});
 
+// Configuration
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
