@@ -1,3 +1,76 @@
 <h1>create a run</h1>
-<%= zones %>
-<%= users %>
+
+<form action="/run/create" method="post">
+    <select name="zone" id="zone">
+        <option value=''>select</option>
+        <% zones.forEach(function(zone) { %>
+            <option value='<%= zone.name %>'><%= zone.name %></option>
+        <% }); %>
+    </select><br />
+    <div class='days'>
+        <% zones.forEach(function(zone) { %>
+            <div class='<%= zone.name %>' style='display:none;'>
+                <% zone.days.forEach(function(day) { %>
+                    <input name='days' class='<%= zone.name %>' type='checkbox' value='<%= day.name %>'><%= day.name %></input>
+                <% }); %>
+            </div>
+        <% }); %>
+    </div>
+    <textarea name='users' id="users"></textarea><br />
+    <textarea name='items' id="items"></textarea><br />
+
+    <button onclick="validate(); return false;">continue</button>
+</form>
+
+<script type='text/javascript'>
+$("#zone").on('change', function() {
+    var zone = $(this).val();
+    $(".days>div").hide();
+
+    if (zone.length > 0) {
+        $("." + zone).show();
+    }
+});
+
+function validate(){
+    // init the variables
+    var $zone = $("#zone")
+      , zoneVal = $zone.val()
+      , $daysWrapper = $(".days")
+      , $days = $(".days input:checkbox:checked")
+      , $users = $("#users")
+      , $items = $("#items")
+      , usersVal = $users.val()
+      , itemsVal = $items.val()
+      , err = [];
+
+    // clear any previous errors
+    $(".error").remove();
+
+    // check that a zone is selected
+    if (zoneVal.length == 0) {
+        err.push({ element: $zone, message: "You must select a zone" });
+    }
+
+    // check that at least one day is selected
+    if ($days.length == 0) {
+        err.push({ element: $daysWrapper, message: "You must select one or more days" });
+    }
+
+    // check that there are users
+    if (usersVal.length == 0) {
+        err.push({ element: $users, message: "You must provide at least one player" });
+    }
+
+    // check if there are any errors
+    if (err.length == 0) {
+        // submit the form
+        $("form").submit();
+    } else {
+        // show the errors
+        err.forEach(function(error) {
+            $(error.element).after("<p class='error'>" + error.message + "</p>");
+        });
+    }
+}
+</script>

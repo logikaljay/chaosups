@@ -1,3 +1,5 @@
+var util = require('util');
+
 module.exports = function(app) {
     app.get('/run', app.libs.restrict, function(req, res) {
         res.redirect('/run/list');
@@ -37,6 +39,11 @@ module.exports = function(app) {
     });
 
     app.post('/run/create', app.libs.restrict, function(req, res) {
-        // to be implemented
+        var zone = req.body.zone;
+        var days = req.body.days;
+        var users = req.body.users;
+        var items = req.body.items;
+
+        res.send(util.format("zone: %s<br />days: %s<br />users: %s<br />items: %s", zone, days, users, items));
     });
 };
