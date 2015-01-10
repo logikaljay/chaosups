@@ -64,6 +64,8 @@ module.exports = function(app) {
         var run = req.session.run;
         if (run !== undefined) {
             res.render('run/confirm', { run: run });
+        } else {
+            res.redirect('/run/create');
         }
     });
 
