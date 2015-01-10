@@ -4,12 +4,12 @@ module.exports = function(app) {
     var Schema = mongoose.Schema;
     var userSchema = new Schema({
         type: Number,
-        email: { type: String, index: { unique: true, dropDups: true } },
+        name: { type: String, index: { unique: true, dropDups: true } },
         salt: String,
         hash: String,
         state: Number,
         points: [{ type: Schema.Types.ObjectId, ref: 'Point' }]
-    });
+    }, { strict: false });
 
     app.models.user = userSchema;
 };
