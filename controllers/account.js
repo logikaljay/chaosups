@@ -17,7 +17,7 @@ module.exports = function(app) {
                     req.session.success = 'Authenticated as ' + user.name
                         + ' click to <a href="/logout">logout</a>. '
                         + ' You may now accesss <a href="/restricted">restricted</a>';
-                    res.redirect('/restricted');
+                    res.redirect('/run/create');
                 });
             } else {
                 req.session.error = 'Authentication failed, please check your username and password.';

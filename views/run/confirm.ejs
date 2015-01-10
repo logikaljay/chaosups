@@ -1,2 +1,35 @@
-<h1>points and items</h1>
-<%= run %>
+<% layout('../layout') -%>
+<h1>Confirm your run
+<h2>Info</h2>
+<p>Zone: <%= run.zone %></p>
+<p>Days: <%= run.days %></p>
+<%
+    var i = 0;
+    var points = 0;
+    run.days.map(function(day) {
+        return points += day.amount;
+    });
+%>
+
+<h2>Players</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Player</th>
+            <th>Points</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% run.users.forEach(function(user) {
+            i++;
+        %>
+        <%= user %>
+        <tr>
+            <td><input type='text' name='player[<%= i %>].name' value='<%= user %>' /></td>
+            <td><input type='text' name='player[<%= i %>].points' value='<%= points %>' /></td>
+            <td><a href='javascript:;' class='js-remove'>remove</a></td>
+        </tr>
+        <% }); %>
+    </tbody>
+</table>

@@ -8,7 +8,7 @@ var fs = require('fs')
   , mongoose = require('mongoose')
   , express = require('express')
   , bodyParser = require('body-parser')
-  , expressLayouts = require('express-ejs-layouts')
+  , engine = require('ejs-locals')
   , hash = require('./lib/hash').hash;
 
 mongoose.connect('mongodb://localhost/chaosups');
@@ -44,18 +44,17 @@ fs.readdir(controllersDir, function(err, files) {
 });
 
 // Configuration
+app.engine('ejs', engine);
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.json());
-app.use(bodyParser.urlencoded());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser('shhhhh, 1234 secrets inside'));
 app.use(express.session({secret: 'shhhhh, 1234 secrets inside'}));
-app.use(expressLayouts);
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 

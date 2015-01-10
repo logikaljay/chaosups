@@ -1,6 +1,7 @@
+<% layout('../layout') -%>
 <h1>create a run</h1>
 
-<form action="/run/create" method="post">
+<form id="form" action="/run/create" method="post">
     <select name="zone" id="zone">
         <option value=''>select</option>
         <% zones.forEach(function(zone) { %>
@@ -11,7 +12,7 @@
         <% zones.forEach(function(zone) { %>
             <div class='<%= zone.name %>' style='display:none;'>
                 <% zone.days.forEach(function(day) { %>
-                    <input name='days' class='<%= zone.name %>' type='checkbox' value='<%= day.name %>'><%= day.name %></input>
+                    <input name='days' class='<%= zone.name %>' type='checkbox' data-amount='<%= day.amount %>' value='<%= day.name %>|<%= day.amount %>'><%= day.name %></input>
                 <% }); %>
             </div>
         <% }); %>
@@ -44,6 +45,8 @@ function validate(){
       , itemsVal = $items.val()
       , err = [];
 
+    console.log($days);
+
     // clear any previous errors
     $(".error").remove();
 
@@ -72,5 +75,7 @@ function validate(){
             $(error.element).after("<p class='error'>" + error.message + "</p>");
         });
     }
+
+    return false;
 }
 </script>

@@ -40,6 +40,7 @@ module.exports = function(app) {
 
     app.post('/run/create', app.libs.restrict, function(req, res) {
         var zone = req.body.zone;
+        console.log(req.body.days);
         var days = req.body.days;
         var users = req.body.users;
         var items = req.body.items;
@@ -48,8 +49,8 @@ module.exports = function(app) {
         var run = {
             zone: zone,
             days: days,
-            users: users,
-            items: items
+            users: users.split(" "),
+            items: items.split("\n")
         };
 
         // save the temp run to the session
