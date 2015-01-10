@@ -44,6 +44,30 @@ module.exports = function(app) {
         var users = req.body.users;
         var items = req.body.items;
 
-        res.send(util.format("zone: %s<br />days: %s<br />users: %s<br />items: %s", zone, days, users, items));
+        // construct the temp run
+        var run = {
+            zone: zone,
+            days: days,
+            users: users,
+            items: items
+        };
+
+        // save the temp run to the session
+        req.session.run = run;
+
+        // redirect to run/confrim
+        res.redirect('/run/confirm');
+    });
+
+    app.get('/run/confirm', app.libs.restrict, function(req, res) {
+        // load the temp run from the session
+        var run = req.session.run;
+        if (run !== undefined) {
+            res.render('run/confirm', { run: run });
+        }
+    });
+
+    app.post('/run/confirm', app.libs.restrict, function(req, res) {
+        // to be implemented
     });
 };
