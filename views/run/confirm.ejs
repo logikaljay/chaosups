@@ -16,18 +16,20 @@ var i = 0;
         </tr>
     </thead>
     <tbody>
-        <% run.users.forEach(function(user) {
-            i++;
-        %>
+        <% run.users.forEach(function(user) { %>
         <tr>
             <td><input type='text' name='player[<%= i %>].name' value='<%= user %>' /></td>
             <td><input type='text' name='player[<%= i %>].points' value='<%= run.points %>' /></td>
             <td><a href='javascript:;' class='js-remove-user'>remove</a></td>
         </tr>
-        <% }); %>
+        <%
+            i++;
+        }); %>
     </tbody>
 </table>
-
+<%
+i = 0;
+%>
 <table>
     <thead>
         <tr>
@@ -43,6 +45,8 @@ var i = 0;
                 <td><input type='text' name='item[i].value' value='1' /></td>
                 <td><a href='javascript:;' class='js-remove-item'>remove</a></td>
             </tr>
-        <% }); %>
+        <%
+            i++;
+        }); %>
     </tbody>
 </table>
