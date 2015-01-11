@@ -39,18 +39,29 @@ module.exports = function(app) {
     });
 
     app.post('/run/create', app.libs.restrict, function(req, res) {
-        var zone = req.body.zone;
-        console.log(req.body.days);
-        var days = req.body.days;
-        var users = req.body.users;
-        var items = req.body.items;
+        var zone = req.body.zone,
+            tmpDays = req.body.days.toString(),
+            users = req.body.users,
+            items = req.body.items,
+            points = 0,
+            days = [];
+
+        tmpDays = tmpDays.split("|");
+        console.log(tmpDays);
+        tmpDays.forEach(function(day) {
+            day = day.toString().split(",");
+            days.push({ name: day[0], amount: day[1] });
+            points += Number(day[1]);
+        });
+        console.log(days);
 
         // construct the temp run
         var run = {
             zone: zone,
             days: days,
             users: users.split(" "),
-            items: items.split("\n")
+            items: items.split("\n"),
+            points: points
         };
 
         // save the temp run to the session

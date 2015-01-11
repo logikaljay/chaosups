@@ -4,13 +4,8 @@
 <p>Zone: <%= run.zone %></p>
 <p>Days: <%= run.days %></p>
 <%
-    var i = 0;
-    var points = 0;
-    run.days.map(function(day) {
-        return points += day.amount;
-    });
+var i = 0;
 %>
-
 <h2>Players</h2>
 <table>
     <thead>
@@ -24,10 +19,9 @@
         <% run.users.forEach(function(user) {
             i++;
         %>
-        <%= user %>
         <tr>
             <td><input type='text' name='player[<%= i %>].name' value='<%= user %>' /></td>
-            <td><input type='text' name='player[<%= i %>].points' value='<%= points %>' /></td>
+            <td><input type='text' name='player[<%= i %>].points' value='<%= run.points %>' /></td>
             <td><a href='javascript:;' class='js-remove'>remove</a></td>
         </tr>
         <% }); %>
