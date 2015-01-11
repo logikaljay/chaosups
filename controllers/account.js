@@ -6,11 +6,6 @@ module.exports = function(app) {
             information: 'Please login before using chaosups',
         };
 
-        if (req.session.err) {
-            data.err = req.session.err;
-            delete req.session.err;
-        }
-
         res.render('login', data);
     });
 
@@ -18,10 +13,7 @@ module.exports = function(app) {
         app.libs.authenticate(req.body.email, req.body.password, function(err, user) {
             if (user) {
                 req.session.regenerate(function() {
-                req.session.user = user;
-                    req.session.success = 'Authenticated as ' + user.name
-                        + ' click to <a href="/logout">logout</a>. '
-                        + ' You may now accesss <a href="/restricted">restricted</a>';
+                    req.session.user = user;
                     res.redirect('/run/create');
                 });
             } else {
@@ -36,12 +28,4 @@ module.exports = function(app) {
             res.redirect('/');
         });
     });
-    /*
-    app.use(function(res, req, next) {
-        res.locals.user = res.session.user || "";
-        res.locals.msg = "hello world";
-        console.dir(res.locals);
-        next();
-    });
-    */
 };

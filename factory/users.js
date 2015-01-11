@@ -28,13 +28,13 @@ module.exports = function(app) {
         });
     };
 
-    app.factory.users.exists = function(name) {
+    app.factory.users.exists = function(name, fn) {
         var User = mongoose.model('User', app.models.user);
         User.findOne({ name: name }, function(err, doc) {
-            if (err) return false;
-            if (doc !== undefined) return true;
+            if (err) fn(false);
+            if (doc !== undefined) fn(true);
 
-            return false;
+            fn(false);
         });
     };
 
@@ -46,7 +46,7 @@ module.exports = function(app) {
         return false;
     };
 
-    app.factory.users.add = function(name) {
+    app.factory.users.add = function(name, fn) {
         if (name === undefined) {
             return false;
         }
@@ -55,7 +55,8 @@ module.exports = function(app) {
         var User = mongoose.model('User', app.models.user);
         var newUser = new User({
             name: name,
-            state: 3
+            state: 3,
+            points: []
         });
 
         // temp - generate temp password for the user
@@ -69,34 +70,32 @@ module.exports = function(app) {
             newUser.hash = hash.toString();
 
             // save this user
-            app.factory.users._save(newUser);
+            app.factory.users._save(newUser, fn);
         });
     };
 
     app.factory.users.addPoints = function(user, zone, points, fn) {
-        app.factory.users.getByName(user, function(user) {
+        app.factory.users.getByName(user.name, function(userEntity) {
+            console.log(user);
             var Point = mongoose.model('Point', app.models.point);
             var userPoint = new Point({
-                user: user,
+                user: userEntity,
                 zone: zone,
                 state: 0,
                 amount: points
             });
 
-            user.points.push(userPoint);
-            user.save(function(err) {
-                fn(user);
+            userEntity.points.push(userPoint);
+            userPoint.save(function(err) {
+                userEntity.save(function(err) {
+                    fn(userEntity);
+                });
             });
         });
     };
 
-    app.factory.users._save = function(user) {
+    app.factory.users._save = function(user, fn) {
         if (user === undefined) {
-            return false;
-        }
-
-        // check if the user exists
-        if (app.factory.users.exists(user.name)) {
             return false;
         }
 
@@ -104,7 +103,11 @@ module.exports = function(app) {
         user.save(function(err) {
             if (err) return false;
 
-            return true;
+            if (fn) {
+                fn(user);
+            } else {
+                return true;
+            }
         });
     };
 };

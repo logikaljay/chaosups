@@ -6,7 +6,7 @@ module.exports = function(app) {
         amount: Number,
         state: Number,
         user: { type: Schema.Types.ObjectId, ref: 'User' },
-        zone: { type: Schema.Types.ObjectId, ref: 'Zone' }
+        zone: String
     });
 
     app.models.point = pointSchema;
