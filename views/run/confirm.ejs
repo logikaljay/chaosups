@@ -22,8 +22,27 @@ var i = 0;
         <tr>
             <td><input type='text' name='player[<%= i %>].name' value='<%= user %>' /></td>
             <td><input type='text' name='player[<%= i %>].points' value='<%= run.points %>' /></td>
-            <td><a href='javascript:;' class='js-remove'>remove</a></td>
+            <td><a href='javascript:;' class='js-remove-user'>remove</a></td>
         </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+<table>
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Value</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% run.items.forEach(function(item) { %>
+            <tr>
+                <td><input type='text' name='item[i].item' value='<%= item %>' /></td>
+                <td><input type='text' name='item[i].value' value='1' /></td>
+                <td><a href='javascript:;' class='js-remove-item'>remove</a></td>
+            </tr>
         <% }); %>
     </tbody>
 </table>
