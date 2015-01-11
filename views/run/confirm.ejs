@@ -21,8 +21,8 @@
         <tbody>
             <% run.users.forEach(function(user) { %>
             <tr class='users'>
-                <td><input type='text' class='user-name' name='player[<%= i %>][name]' value='<%= user %>' /></td>
-                <td><input type='text' class='user-points' name='player[<%= i %>][points]' value='<%= run.points %>' /></td>
+                <td><input type='text' class='user-name' name='user[<%= i %>][name]' value='<%= user %>' /></td>
+                <td><input type='text' class='user-points' name='user[<%= i %>][points]' value='<%= run.points %>' /></td>
                 <td><a href='javascript:;' class='js-remove-user'>remove</a></td>
             </tr>
             <%

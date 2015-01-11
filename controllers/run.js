@@ -85,6 +85,31 @@ module.exports = function(app) {
 
     app.post('/run/confirm', app.libs.restrict, function(req, res) {
         console.log(req.body);
+        run = req.session.run;
+        run.users = req.body.user;
+        run.items = req.body.items;
+        console.log(run);
+
+        // iterate over each user and if they don't exist - create them
+        run.users.forEach(function(user) {
+            if (!app.factory.users.exists(user)) {
+                app.factory.users.add(user.name);
+            }
+        });
+
+        // add points to each user
+        run.users.forEach(function(user) {
+            app.factory.users.addPoints(user.name, run.zone, user.points,
+                function(user) {
+                    console.log(user);
+                });
+        });
+
+        // iterate over each item and add it
+        run.items.forEach(function(item) {
+            console.log(item);
+        });
+
         res.send('sent');
     });
 };

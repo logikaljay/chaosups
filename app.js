@@ -43,6 +43,16 @@ fs.readdir(controllersDir, function(err, files) {
     });
 });
 
+// Load factories
+app.factory = {};
+var factoryDir = path.join(__dirname, 'factory');
+fs.readdir(factoryDir, function(err, files) {
+    files.forEach(function(factory) {
+        console.log(factory);
+        require(path.join(factoryDir, factory))(app);
+    });
+});
+
 // Configuration
 app.engine('ejs', engine);
 app.set('port', process.env.PORT || 3000);
