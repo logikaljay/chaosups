@@ -39,6 +39,8 @@ module.exports = function(app) {
     });
 
     app.post('/run/create', app.libs.restrict, function(req, res) {
+        console.log(req.body.days.toString());
+
         var zone = req.body.zone,
             tmpDays = req.body.days.toString(),
             users = req.body.users,
@@ -46,10 +48,10 @@ module.exports = function(app) {
             points = 0,
             days = [];
 
-        tmpDays = tmpDays.split("|");
+        tmpDays = tmpDays.split(",");
         console.log(tmpDays);
         tmpDays.forEach(function(day) {
-            day = day.toString().split(",");
+            day = day.toString().split("|");
             days.push({ name: day[0], amount: day[1] });
             points += Number(day[1]);
         });
