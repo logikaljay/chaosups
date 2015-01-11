@@ -6,6 +6,11 @@ module.exports = function(app) {
             information: 'Please login before using chaosups',
         };
 
+        if (req.session.err) {
+            data.err = req.session.err;
+            delete req.session.err;
+        }
+
         res.render('login', data);
     });
 

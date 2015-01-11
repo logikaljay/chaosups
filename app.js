@@ -52,6 +52,7 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('shhhhh, 1234 secrets inside'));
 app.use(express.session({secret: 'shhhhh, 1234 secrets inside'}));

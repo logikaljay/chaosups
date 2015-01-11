@@ -84,6 +84,7 @@ module.exports = function(app) {
     });
 
     app.post('/run/confirm', app.libs.restrict, function(req, res) {
-        // to be implemented
+        console.log(req.body);
+        res.send('sent');
     });
 };

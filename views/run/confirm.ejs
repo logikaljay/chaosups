@@ -1,52 +1,128 @@
 <% layout('../layout') -%>
-<h1>Confirm your run
-<h2>Info</h2>
-<p>Zone: <%= run.zone %></p>
-<p>Days: <%= run.days %></p>
-<%
-var i = 0;
-%>
-<h2>Players</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Player</th>
-            <th>Points</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% run.users.forEach(function(user) { %>
-        <tr>
-            <td><input type='text' name='player[<%= i %>].name' value='<%= user %>' /></td>
-            <td><input type='text' name='player[<%= i %>].points' value='<%= run.points %>' /></td>
-            <td><a href='javascript:;' class='js-remove-user'>remove</a></td>
-        </tr>
-        <%
-            i++;
-        }); %>
-    </tbody>
-</table>
-<%
-i = 0;
-%>
-<table>
-    <thead>
-        <tr>
-            <th>Item</th>
-            <th>Value</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% run.items.forEach(function(item) { %>
+<h1>Confirm your run</h1>
+
+<form action="/run/confirm" method="post">
+    <h2>Info</h2>
+    <p>Zone: <%= run.zone %></p>
+    <p>Days: <%= run.days %></p>
+    <%
+    var i = 0;
+    %>
+    <h2>Players</h2>
+
+    <table>
+        <thead>
             <tr>
-                <td><input type='text' name='item[i].item' value='<%= item %>' /></td>
-                <td><input type='text' name='item[i].value' value='1' /></td>
-                <td><a href='javascript:;' class='js-remove-item'>remove</a></td>
+                <th>Player</th>
+                <th>Points</th>
+                <th>Action</th>
             </tr>
-        <%
-            i++;
-        }); %>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <% run.users.forEach(function(user) { %>
+            <tr class='users'>
+                <td><input type='text' class='user-name' name='player[<%= i %>][name]' value='<%= user %>' /></td>
+                <td><input type='text' class='user-points' name='player[<%= i %>][points]' value='<%= run.points %>' /></td>
+                <td><a href='javascript:;' class='js-remove-user'>remove</a></td>
+            </tr>
+            <%
+                i++;
+            }); %>
+        </tbody>
+    </table>
+    <%
+    i = 0;
+    %>
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% run.items.forEach(function(item) { %>
+                <tr class='items'>
+                    <td><input type='text' class='item-name' name='item[<%= i %>][name]' value='<%= item %>' /></td>
+                    <td><input type='text' class='item-value' name='item[<%= i %>][value]' value='1' /></td>
+                    <td><a href='javascript:;' data-field='action' class='js-remove-item'>remove</a></td>
+                </tr>
+            <%
+                i++;
+            }); %>
+        </tbody>
+    </table>
+
+    <button onclick='validate(); return false;'>Create</button>
+</form>
+
+<script type='text/javascript'>
+    $(function() {
+        // bind remove player
+        $(".js-remove-user").on('click', function() {
+            $(this).parent().parent().remove();
+        });
+
+        // bind remove item
+        $(".js-remove-item").on('click', function() {
+            $(this).parent().parent().remove();
+        });
+    });
+
+    function validate() {
+        var err = [];
+
+        // iterate over all users
+        var $users = $(".users");
+        $users.forEach(function($user) {
+            var name = $user.find('user-name').val();
+            var points = $user.find('user-points').val();
+
+            // validate the name
+            if (name.length == 0) {
+                err.push({ element: $user, message: "Player must have a name" });
+            }
+
+            // make sure points is a positive number
+            if (isNaN(points)) {
+                err.push({ element: $user, message: "Points must be a number" });
+            } else {
+                if (Number(points) < 1) {
+                    err.push({ element: $user, message: "Points must be a positive number" });
+                }
+            }
+        });
+
+        // iterate over all items
+        var $items = $(".items");
+
+        $items.forEach(function($item) {
+            var name = $item.find('item-name').val();
+            var value = $item.find('item-value').val();
+
+            if (name.length == 0) {
+                err.push({ element: $item, message: "Item must have a name "});
+            }
+
+            if (isNaN(value)) {
+                err.push({ element: $item, message: "Item must have a value" });
+            } else {
+                if (Number(points) < 1) {
+                    err.push({ element: $item, message: "Value must be a positive number" });
+                }
+            }
+        });
+
+        // check if there are any errors
+        if (err.length > 0) {
+            // show the errors
+            err.forEach(function(error) {
+                $(error.element).after("<p class='error'>" + error.message + "</p>");
+            });
+        } else {
+            // submit the form
+            $("form").submit();
+        }
+    }
+</script>
