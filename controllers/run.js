@@ -86,6 +86,7 @@ module.exports = function(app) {
         run = req.session.run;
         run.users = req.body.user;
         run.items = req.body.item;
+        run.leader = req.session.user.name;
 
         run.runUsers = [];
         run.runItems = [];
@@ -100,7 +101,7 @@ module.exports = function(app) {
         });
     });
 
-    _addUsersAndPoints: function(run, users, fn) {
+    _addUsersAndPoints = function(run, users, fn) {
         // iterate over each user and if they don't exist - create them
         async.forEach(users, function(user, callback) {
             app.factory.users.exists(user.name, function(exists) {
@@ -117,8 +118,9 @@ module.exports = function(app) {
                             console.log('added ' + pointEntity.amount + ' points to ' + userEntity.name);
                             if (pointEntity !== null) {
                                 run.runPoints.push(pointEntity);
-                                callback();
                             }
+
+                            callback();
                         });
 
                     });
@@ -134,8 +136,9 @@ module.exports = function(app) {
                             console.log('added ' + pointEntity.amount + ' points  to ' + userEntity.name);
                             if (pointEntity !== null) {
                                 run.runPoints.push(pointEntity);
-                                callback();
                             }
+
+                            callback();
                         }); 
                     });
                 }
@@ -146,22 +149,24 @@ module.exports = function(app) {
         });
     };
 
-    _addItems: function(run, items, fn) {
+    _addItems = function(run, items, fn) {
         // iterate over all the items, adding them
         async.forEach(items, function(item, callback) {
             app.factory.items.add(item.name, item.value, run.zone, function(itemEntity) {
                 if (itemEntity !== null) {
                     run.runItems.push(itemEntity);
                 }
+
+                callback();
             });
         }, function(err) {
             fn(run)
         });
     };
 
-    _addRun: function(run, fn) {
+    _addRun = function(run, fn) {
         // get the leader
-        app.factory.users.getByName(req.session.user.name, function(userEntity) {
+        app.factory.users.getByName(run.leader, function(userEntity) {
             console.log(run.runPoints);
             app.factory.runs.add(userEntity, run.runUsers, run.runPoints, run.runItems, run.zone,
                 function(runEntity) {
