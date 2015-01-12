@@ -12,6 +12,7 @@ module.exports = function(app) {
            .populate("items")
            .populate("leader")
            .populate("points")
+           .limit(6)
            .exec(function(err, docs) {
             if (err) {
                 console.log("app.factory.runs.getLatest ERROR: " + err);

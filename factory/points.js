@@ -13,7 +13,7 @@ module.exports = function(app) {
             .populate("points")
             .exec(function(err, docs) {
             if (err) {
-                console.log("app.facotry.points.getAllByUser ERROR: " + err);
+                console.log("app.factory.points.getAllByUser ERROR: " + err);
             }
 
             var options = {
@@ -38,20 +38,24 @@ module.exports = function(app) {
                                 points[point.zone] = {};
                             }
 
-                            if (points[point.zone]['approved'] === undefined) {
-                                points[point.zone]['approved'] = 0;
+                            if (points[point.zone].approved === undefined) {
+                                points[point.zone].approved = 0;
                             }
 
-                            if (points[point.zone]['unapproved'] === undefined) {
-                                points[point.zone]['unapproved'] = 0;
+                            if (points[point.zone].unapproved === undefined) {
+                                points[point.zone].unapproved = 0;
                             }
 
-                            if (point.state == 0) {
-                                points[point.zone]['approved'] += Number(point.amount);
+                            if (points[point.zone].used === undefined) {
+                                points[point.zone].used = 0;
+                            }
+
+                            if (point.state === 0) {
+                                points[point.zone].approved += Number(point.amount);
                             }
 
                             if (point.state == 1) {
-                                points[point.zone]['unapproved'] += Number(point.amount);
+                                points[point.zone].unapproved += Number(point.amount);
                             }
 
                             callback();

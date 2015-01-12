@@ -5,7 +5,9 @@ module.exports = function(app) {
 
     app.factory.items.getLatest = function(fn) {
         var Item = mongoose.model('Item', app.models.item);
-        Item.find({}, function(err, docs) {
+        Item.find({})
+            .limit(6)
+            .exec(function(err, docs) {
             if (err) {
                 console.log('app.factory.items.getLatest ERROR: ' + err);
             }
