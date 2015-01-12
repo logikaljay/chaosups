@@ -88,16 +88,22 @@ module.exports = function(app) {
 
         run.runUsers = [];
         run.runItems = [];
+        run.runPoints = [];
 
         // iterate over each user and if they don't exist - create them
-        run.users.forEach(function(user) {
+        for (var i = 0; i < run.users; i++) {
+            var user = run.users[i];
+
             app.factory.users.exists(user.name, function(exists) {
                 if (exists) {
                     // get the user
                     app.factory.users.getByName(user.name, function(userEntity) {
                         // add points to the user
                         app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
-                            console.log('Added points to existing user: ' + user.name);
+                            console.log('added ' + pointEntity.amount + ' points to ' + userEntity.name);
+                            if (pointEntity !== null) {
+                                run.runPoints.push(pointEntity);
+                            }
                         });
 
                         if (userEntity !== null) {
@@ -105,11 +111,13 @@ module.exports = function(app) {
                         }
                     });
                 } else {
-                    console.log("attempting to add user: " + user.name);
                     app.factory.users.add(user.name, function(userEntity) {
                         // add points to the user
                         app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
-                            console.log('Added points to new user: ' + user.name);
+                            console.log('added ' + pointEntity.amount + ' points  to ' + userEntity.name);
+                            if (pointEntity !== null) {
+                                run.runPoints.push(pointEntity);
+                            }
                         });
 
                         if (userEntity !== null) {
@@ -118,22 +126,26 @@ module.exports = function(app) {
                     });
                 }
             });
-        });
+        }
 
         // iterate over all the items, adding them
         run.items.forEach(function(item) {
             app.factory.items.add(item.name, item.value, run.zone, function(itemEntity) {
-                console.log('Added item: ' + item.name);
-
                 if (itemEntity !== null) {
                     run.runItems.push(itemEntity);
                 }
             });
         });
 
-        // add the run
-        
+        // get the leader
+        app.factory.users.getByName(req.session.user.name, function(userEntity) {
+            console.log(run.runPoints);
+            app.factory.runs.add(userEntity, run.runUsers, run.runPoints, run.runItems, run.zone,
+                function(runEntity) {
 
-        res.send('sent');
+                });
+        });
+
+        res.redirect('/');
     });
 };

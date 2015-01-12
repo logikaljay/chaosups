@@ -1,4 +1,6 @@
 <% layout('layout.ejs') -%>
 <div class="container">
-    <%= locals.user.name %>
+    <% if (user) {  %>
+        <%= user.name %>
+    <% } %>
 </div>

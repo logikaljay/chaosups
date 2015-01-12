@@ -16,39 +16,26 @@ module.exports = function(app) {
 
     app.factory.points.add = function(user, zone, points, fn) {
         if (user == null) {
+            console.log("app.factory.points.add ERROR: user was null");
             fn(null);
         } else {
-            // check to see if this user has points for this zone already
-            app.factory.points.get(user, zone, function(pointsEntity) {
-                if (pointsEntity == null) {
-                    // create the points entry
-                    var Points = mongoose.model('Point', app.models.point);
-                    var newPoints = new Points({
-                        user: user,
-                        zone: zone,
-                        state: 0,
-                        amount: Number(points)
-                    });
+            // create the points entry
+            var Points = mongoose.model('Point', app.models.point);
+            var newPoints = new Points({
+                user: user,
+                zone: zone,
+                state: 1,
+                amount: Number(points)
+            });
 
-                    newPoints.save(function(err) {
-                        if (err) {
-                            console.log('app.factory.points.add ERROR: ' + err);
-                        }
-
-                        fn(newPoints);
-                    });
-                } else {
-                    // add the points
-                    pointsEntity.amount = pointsEntity.amount + Number(points);
-                    pointsEntity.save(function(err) {
-                        if (err) {
-                            console.log("app.factory.points.add ERROR: " + err);
-                        }
-
-                        fn(pointsEntity);
-                    });
+            console.log('saving newPoints: ' + newPoints);
+            newPoints.save(function(err) {
+                if (err) {
+                    console.log('app.factory.points.add ERROR: ' + err);
                 }
+
+                fn(newPoints);
             });
         }
-    }; 
+    };
 }
