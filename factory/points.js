@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var async = require('async');
 
 module.exports = function(app) {
     app.factory.points = {};
@@ -24,27 +25,43 @@ module.exports = function(app) {
                 if (err) {
                     console.log("app.factory.points.getAllByUser populate ERROR: " + err);
                 }
-                var points = [];
 
-                runs.map(function(run) {
-                    run.points.map(function(point) {
+                var points = [];
+                var tmpPoints = [];
+                async.forEach(runs, function(run, callback) {
+                    tmpPoints = tmpPoints.concat(run.points);
+                    callback();
+                }, function(err) {
+                    async.forEach(tmpPoints, function(point, callback) {
                         if (point.user !== null && point.user._id == id) {
-                            if (points[point.zone] == undefined) {
-                                points[point.zone] = 0;
+                            if (points[point.zone] === undefined) {
+                                points[point.zone] = {};
                             }
 
-                            /*
-                            if (points[point.zone][point.state] == undefined) {
-                                points[point.zone][point.state] = 0;
-                            }*/
-                            
-                            console.log("adding " + point.amount + " to " + point.zone);
-                            points[point.zone] += Number(point.amount);
+                            if (points[point.zone]['approved'] === undefined) {
+                                points[point.zone]['approved'] = 0;
+                            }
+
+                            if (points[point.zone]['unapproved'] === undefined) {
+                                points[point.zone]['unapproved'] = 0;
+                            }
+
+                            if (point.state == 0) {
+                                points[point.zone]['approved'] += Number(point.amount);
+                            }
+
+                            if (point.state == 1) {
+                                points[point.zone]['unapproved'] += Number(point.amount);
+                            }
+
+                            callback();
+                        } else {
+                            callback();
                         }
+                    }, function(err) {
+                        fn(points);
                     });
                 });
-
-                fn(points);
             });
         });
     };

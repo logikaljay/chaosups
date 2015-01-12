@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 module.exports = function(app) {
     app.factory.runs = {};
 
-    app.factory.runs.getAll = function(fn) {
+    app.factory.runs.getLatest = function(fn) {
         var Run = mongoose.model('Run', app.models.run);
         var Item = mongoose.model('Item', app.models.item);
         var Point = mongoose.model('Point', app.models.point);
@@ -14,7 +14,7 @@ module.exports = function(app) {
            .populate("points")
            .exec(function(err, docs) {
             if (err) {
-                console.log("app.factory.runs.getAll ERROR: " + err);
+                console.log("app.factory.runs.getLatest ERROR: " + err);
             }
 
             var options = {

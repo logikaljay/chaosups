@@ -1,24 +1,35 @@
 var mongoose = require('mongoose');
+var async = require('async');
 
 module.exports = function(app) {
     app.get('/', app.libs.restrict, function(req, res){
-        var userId = req.session.user.id;
-        
         // load user points and inject into the session
-        app.factory.points.getAllByUserId(userId, function(points) {
-            // set the points to the session
-            res.locals.points = points;
-            req.session.points = points;
-            console.log("POINTS: " + points);
-
-            // get runs
-            app.factory.runs.getAll(function(runs) {
-                res.render('index', { runs: runs });
-            });
+        _getRuns(req, function(runs, points, items) {
+            res.render('index', { runs: runs, points: points, items: items });
         });
     });
 
     app.get('/restricted', app.libs.restrict, function(req, res) {
         res.send('Wahoo! restricted area. click to <a href="/logout">logout</a>');
     });
+
+    _getRuns = function(req, fn) {
+        app.factory.runs.getLatest(function(runs) {
+            _getPoints(req, runs, fn);
+        });
+    };
+
+    _getPoints = function(req, runs, fn) {
+        var userId = req.session.user.id;
+
+        app.factory.points.getAllByUserId(userId, function(points) {
+            _getItems(req, runs, points, fn);
+        });
+    };
+
+    _getItems = function(req, runs, points, fn) {
+        app.factory.items.getLatest(function(items) {
+            fn(runs, points, items);
+        });
+    };
 };

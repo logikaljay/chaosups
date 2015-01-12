@@ -3,11 +3,34 @@
 <div class="container">
     <h1>Dashboard</h1>
     <% if (points) { %>
-        <%- JSON.stringify(points) %>
+        <h3>Points</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Zone</th>
+                <th>Approved</th>
+                <th>Unapproved</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% for (var zone in points) { %>
+                <tr>
+                    <td width="100"><%= zone %></td>
+                    <td width="100"><%= points[zone]['approved'] %></td>
+                    <td width="100"><%= points[zone]['unapproved'] %></td>
+                </tr>
+            <% } %>
+            </tbody>
+        </table>
+    <% } %>
+
+    <% if (items) { %>
+
     <% } %>
 
     <% if (runs) { %>
-        <table>
+        <h3>Runs</h3>
+        <table width="100%">
             <thead>
             <tr>
                 <th>Zone</th>
