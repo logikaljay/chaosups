@@ -9,6 +9,7 @@ var fs = require('fs')
   , express = require('express')
   , bodyParser = require('body-parser')
   , engine = require('ejs-locals')
+  , moment = require('moment')
   , hash = require('./lib/hash').hash;
 
 mongoose.connect('mongodb://localhost/chaosups');
@@ -54,6 +55,7 @@ fs.readdir(factoryDir, function(err, files) {
 });
 
 // Configuration
+app.locals.moment = moment;
 app.engine('ejs', engine);
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));

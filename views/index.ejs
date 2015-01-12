@@ -1,9 +1,6 @@
 <% layout('layout.ejs') -%>
-<div class="container">
-    <% if (user) {  %>
-        <%= user.name %>
-    <% } %>
 
+<div class="container">
     <% if (runs) { %>
         <table>
             <thead>
@@ -13,16 +10,29 @@
                 <th>Leader</th>
                 <th># items</th>
                 <th># players</th>
+                <th>action</th>
             </tr>
             </thead>
             <tbody>
             <% runs.forEach(function(run) { %>
                 <tr>
                     <td><%= run.zone %></td>
-                    <td><%= run.date %></td>
-                    <td><%= run.leader %></td>
+                    <td><%= moment(run.date).format("MMM Do YYYY") %></td>
+                    <td><%= run.leader.name %></td>
                     <td><%= run.items.length %></td>
-                    <td><%= run.users.length %></td>
+                    <td><%= run.points.map(function(point) { return point.user.name }) %></td>
+                    <td>
+                        <a href="/run/detail/<%=run._id%>">View</a>
+                        <% if (user.isAdmin) { %>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">Edit</a></li>
+                                <li><a href="#" class='danger'>Delete</a></li>
+                            </ul>
+                        </li>
+                        <% } %>
+                    </td>
                 </tr>
             <% }); %>
             </tbody>

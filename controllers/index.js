@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 module.exports = function(app) {
     app.get('/', app.libs.restrict, function(req, res){
         // get runs
-        app.factory.runs.get(function(runs) {
+        app.factory.runs.getAll(function(runs) {
             res.render('index', { runs: runs });
         });
     });

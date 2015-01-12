@@ -5,14 +5,29 @@ module.exports = function(app) {
 
     app.factory.runs.getAll = function(fn) {
         var Run = mongoose.model('Run', app.models.run);
-        Run.find({}, function(err, runs) {
+        var Item = mongoose.model('Item', app.models.item);
+        var Point = mongoose.model('Point', app.models.point);
+        var User = mongoose.model('User', app.models.user);
+        Run.find({})
+           .populate("items")
+           .populate("leader")
+           .populate("points")
+           .exec(function(err, docs) {
             if (err) {
                 console.log("app.factory.runs.getAll ERROR: " + err);
             }
 
-            fn(runs);
+            var options = {
+                path: 'points.user',
+                model: 'User'
+            };
+
+            Run.populate(docs, options, function(err, runs) {
+                console.log(runs);
+                fn(runs);
+            });            
         })
-    }
+    };
 
     app.factory.runs.add = function(leader, users, points, items, zone, fn) {
         var Run = mongoose.model('Run', app.models.run);
