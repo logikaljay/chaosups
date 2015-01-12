@@ -14,6 +14,7 @@ if (process.argv.length <= 2) {
 }
 
 var name = process.argv[2];
+var type = process.argv[3] || 0;
 app.factory.users.exists(name, function(exists) {
     if (exists) {
         console.log(util.format("The user '%s' already exists", name));
@@ -21,6 +22,15 @@ app.factory.users.exists(name, function(exists) {
     }
 
     app.factory.users.add(name, function(userEntity) {
-        console.log(util.format("The user '%s' was created", name));
+        userEntity.type = type;
+        userEntity.save(function(err) {
+            if (type == 0) {
+                console.log(util.format("The user '%s' was created", name));
+            } else if (type == 1) {
+                console.log(util.format("The gatekeeper '%s' was created", name));
+            } else if (type == 2) {
+                console.log(util.format("The admin '%s' was created", name));
+            }
+        });
     });
 });
