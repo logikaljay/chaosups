@@ -93,7 +93,7 @@ module.exports = function(app) {
                     // get the user
                     app.factory.users.getByName(user.name, function(userEntity) {
                         // add points to the user
-                        app.factory.users.addPoints(userEntity, run.zone, user.points, function(pointEntity) {
+                        app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
                             console.log('Added points to existing user: ' + user.name);
                         });
                     });
@@ -101,7 +101,7 @@ module.exports = function(app) {
                     console.log("attempting to add user: " + user.name);
                     app.factory.users.add(user.name, function(userEntity) {
                         // add points to the user
-                        app.factory.users.addPoints(userEntity, run.zone, user.points, function(pointEntity) {
+                        app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
                             console.log('Added points to new user: ' + user.name);
                         });
                     });

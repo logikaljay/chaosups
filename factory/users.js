@@ -32,7 +32,7 @@ module.exports = function(app) {
         var User = mongoose.model('User', app.models.user);
         User.findOne({ name: name }, function(err, doc) {
             if (err) fn(false);
-            if (doc !== undefined) fn(true);
+            if (doc !== null) fn(true);
 
             fn(false);
         });
@@ -71,26 +71,6 @@ module.exports = function(app) {
 
             // save this user
             app.factory.users._save(newUser, fn);
-        });
-    };
-
-    app.factory.users.addPoints = function(user, zone, points, fn) {
-        app.factory.users.getByName(user.name, function(userEntity) {
-            console.log(user);
-            var Point = mongoose.model('Point', app.models.point);
-            var userPoint = new Point({
-                user: userEntity,
-                zone: zone,
-                state: 0,
-                amount: points
-            });
-
-            userEntity.points.push(userPoint);
-            userPoint.save(function(err) {
-                userEntity.save(function(err) {
-                    fn(userEntity);
-                });
-            });
         });
     };
 
