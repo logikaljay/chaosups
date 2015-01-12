@@ -4,6 +4,7 @@ module.exports = function(app) {
         var data = {
             title: 'Login',
             information: 'Please login before using chaosups',
+            user: null
         };
 
         res.render('login', data);
@@ -13,13 +14,13 @@ module.exports = function(app) {
         app.libs.authenticate(req.body.email, req.body.password, function(err, user) {
             if (user) {
                 req.session.regenerate(function() {
-                    if (user.type == 2) {
-                        user.isAdmin = true;
-                    } else {
-                        user.isAdmin = false;
-                    }
-                    
-                    req.session.user = user;
+                    var sessionUser = {
+                        name: user.name,
+                        points: user.points,
+                        id: user._id,
+                        isAdmin: user.type == 2 ? true : false
+                    };
+                    req.session.user = sessionUser;
                     res.redirect('/run/create');
                 });
             } else {

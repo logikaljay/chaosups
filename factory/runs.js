@@ -23,9 +23,8 @@ module.exports = function(app) {
             };
 
             Run.populate(docs, options, function(err, runs) {
-                console.log(runs);
                 fn(runs);
-            });            
+            });
         })
     };
 

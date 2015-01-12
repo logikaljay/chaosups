@@ -1,27 +1,29 @@
 <% layout('../layout') -%>
-<h1>create a run</h1>
+<div class='container'>
+    <h1>create a run</h1>
 
-<form id="form" action="/run/create" method="post">
-    <select name="zone" id="zone">
-        <option value=''>select</option>
-        <% zones.forEach(function(zone) { %>
-            <option value='<%= zone.name %>'><%= zone.name %></option>
-        <% }); %>
-    </select><br />
-    <div class='days'>
-        <% zones.forEach(function(zone) { %>
-            <div class='<%= zone.name %>' style='display:none;'>
-                <% zone.days.forEach(function(day) { %>
-                    <input name='days' class='<%= zone.name %>' type='checkbox' data-amount='<%= day.amount %>' value='<%= day.name %>|<%= day.amount %>'><%= day.name %></input>
-                <% }); %>
-            </div>
-        <% }); %>
-    </div>
-    <textarea name='users' id="users"></textarea><br />
-    <textarea name='items' id="items"></textarea><br />
+    <form id="form" action="/run/create" method="post">
+        <select name="zone" id="zone">
+            <option value=''>select</option>
+            <% zones.forEach(function(zone) { %>
+                <option value='<%= zone.name %>'><%= zone.name %></option>
+            <% }); %>
+        </select><br />
+        <div class='days'>
+            <% zones.forEach(function(zone) { %>
+                <div class='<%= zone.name %>' style='display:none;'>
+                    <% zone.days.forEach(function(day) { %>
+                        <input name='days' class='<%= zone.name %>' type='checkbox' data-amount='<%= day.amount %>' value='<%= day.name %>|<%= day.amount %>'><%= day.name %></input>
+                    <% }); %>
+                </div>
+            <% }); %>
+        </div>
+        <textarea name='users' id="users"></textarea><br />
+        <textarea name='items' id="items"></textarea><br />
 
-    <button onclick="validate(); return false;">continue</button>
-</form>
+        <button onclick="validate(); return false;">continue</button>
+    </form>
+</div>
 
 <script type='text/javascript'>
 $("#zone").on('change', function() {

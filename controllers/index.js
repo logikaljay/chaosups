@@ -2,9 +2,19 @@ var mongoose = require('mongoose');
 
 module.exports = function(app) {
     app.get('/', app.libs.restrict, function(req, res){
-        // get runs
-        app.factory.runs.getAll(function(runs) {
-            res.render('index', { runs: runs });
+        var userId = req.session.user.id;
+        
+        // load user points and inject into the session
+        app.factory.points.getAllByUserId(userId, function(points) {
+            // set the points to the session
+            res.locals.points = points;
+            req.session.points = points;
+            console.log("POINTS: " + points);
+
+            // get runs
+            app.factory.runs.getAll(function(runs) {
+                res.render('index', { runs: runs });
+            });
         });
     });
 

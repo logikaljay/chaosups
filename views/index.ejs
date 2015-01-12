@@ -1,6 +1,11 @@
 <% layout('layout.ejs') -%>
 
 <div class="container">
+    <h1>Dashboard</h1>
+    <% if (points) { %>
+        <%- JSON.stringify(points) %>
+    <% } %>
+
     <% if (runs) { %>
         <table>
             <thead>
@@ -18,20 +23,28 @@
                 <tr>
                     <td><%= run.zone %></td>
                     <td><%= moment(run.date).format("MMM Do YYYY") %></td>
-                    <td><%= run.leader.name %></td>
+                    <td><%= run.leader !== null ? run.leader.name : "N/a" %></td>
                     <td><%= run.items.length %></td>
-                    <td><%= run.points.map(function(point) { return point.user.name }) %></td>
+                    <td><%= run.points.map(function(point) { return point.user !== null ? point.user.name : "N/a" }) %></td>
                     <td>
-                        <a href="/run/detail/<%=run._id%>">View</a>
+                    <ul>
+                        <li><a href="/run/detail/<%=run._id%>">View</a></li>
                         <% if (user.isAdmin) { %>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="<%= run.state == 1 ? "/run/approve/" + run._id : "/run/approve/" + run._id %>">
+                                        <%= run.state == 1 ? "Approve" : "Unapprove" %>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
                                 <li><a href="#">Edit</a></li>
                                 <li><a href="#" class='danger'>Delete</a></li>
                             </ul>
                         </li>
                         <% } %>
+                    </ul>
                     </td>
                 </tr>
             <% }); %>
