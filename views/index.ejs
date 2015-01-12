@@ -4,7 +4,7 @@
     <h1>Dashboard</h1>
     <% if (points) { %>
         <h3>Points</h3>
-        <table>
+        <table class="table table-hover">
             <thead>
             <tr>
                 <th>Zone</th>
@@ -28,12 +28,13 @@
 
     <% if (items) { %>
         <h3>Items</h3>
-        <table width="100%">
+        <table width="100%" class="table table-hover">
             <thead>
             <tr>
                 <th>Item</th>
                 <th>Zone</th>
-                <th>Minimum Bid</th>
+                <th>State</th>
+                <th>Minimum bid</th>
             </tr>
             </thead>
             <tbody>
@@ -41,6 +42,7 @@
                 <tr>
                     <td><%= item.name %></td>
                     <td><%= item.zone %></td>
+                    <td><%= item.state == 0 ? "approved" : "unapproved" %>
                     <td><%= item.minimumBid %></td>
                 </tr>
             <% }); %>
@@ -50,15 +52,16 @@
 
     <% if (runs) { %>
         <h3>Runs</h3>
-        <table width="100%">
+        <table width="100%" class="table table-hover">
             <thead>
             <tr>
                 <th>Zone</th>
                 <th>Date</th>
                 <th>Leader</th>
-                <th># items</th>
-                <th># players</th>
-                <th>action</th>
+                <th>Items</th>
+                <th>Players</th>
+                <th>State</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -69,6 +72,7 @@
                     <td><%= run.leader !== null ? run.leader.name : "N/a" %></td>
                     <td><%= run.items.length %></td>
                     <td><%= run.points.map(function(point) { return point.user !== null ? point.user.name : "N/a" }) %></td>
+                    <td><%= run.state == 1 ? "approved" : "unapproved" %></td>
                     <td>
                     <ul>
                         <li><a href="/run/detail/<%=run._id%>">View</a></li>
@@ -77,7 +81,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                                 <li>
-                                    <a href="<%= run.state == 1 ? "/run/approve/" + run._id : "/run/approve/" + run._id %>">
+                                    <a href="<%= run.state == 1 ? "/run/approve/" + run._id : "/run/unapprove/" + run._id %>">
                                         <%= run.state == 1 ? "Approve" : "Unapprove" %>
                                     </a>
                                 </li>

@@ -1,5 +1,5 @@
-var util = require('util');
-var async = require('async');
+var util = require('util')
+  , async = require('async');
 
 module.exports = function(app) {
     app.get('/run', app.libs.restrict, function(req, res) {
@@ -40,11 +40,19 @@ module.exports = function(app) {
     });
 
     app.get('/run/approve/:id', app.libs.restrictAdmin, function(req, res) {
-        res.send("approving run id: " + req.params.id);
+        var runId = req.params.id;
+
+        _updateRunState(runId, 0, function() {
+            res.redirect('back');
+        });
     });
 
     app.get('/run/unapprove/:id', app.libs.restrictAdmin, function(req, res) {
+        var runId = req.params.id;
 
+        _updateRunState(runId, 1, function() {
+            res.redirect('back');
+        });
     });
 
     app.post('/run/create', app.libs.restrict, function(req, res) {
@@ -108,6 +116,50 @@ module.exports = function(app) {
             })
         });
     });
+
+    _updateRunState = function(runId, state, fn) {
+        // get the run in all its detail
+        app.factory.runs.getById(runId, function(run) {
+            var itemsDone = false;
+            var pointsDone = false;
+
+            // update the run state
+            run.state = state;
+            run.save(function(err) {
+                if (err) {
+                    console.log(util.format("/run/approve/%s run update ERROR: %s", runId, err));
+                }
+
+                // iterate over items
+                async.forEach(run.items, function(item, callback) {
+                    // update item state
+                    item.state = state;
+                    item.save(function(err) {
+                        if (err) {
+                            console.log(util.format("/run/approve/%s item update ERROR: %s", runId, err));
+                        }
+
+                        callback();
+                    });
+                }, function(err) {
+                    // iterate over points
+                    async.forEach(run.points, function(point, callback) {
+                        // update point state
+                        point.state = state;
+                        point.save(function(err) {
+                            if (err) {
+                                console.log(util.format("/run/approve/%s point update ERROR: %s", runId, err));
+                            }
+
+                            callback();
+                        });
+                    }, function(err) {
+                        fn();
+                    });
+                });
+            });
+        });
+    };
 
     _addUsersAndPoints = function(run, users, fn) {
         // iterate over each user and if they don't exist - create them
