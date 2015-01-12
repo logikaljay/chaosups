@@ -6,7 +6,7 @@ module.exports = function(app) {
         item: { type: Schema.Types.ObjectId, ref: 'Item' },
         user: { type: Schema.Types.ObjectId, ref: 'User' },
         amount: Number,
-        previous: { type: Schema.Types.ObjectId, ref: 'Bid' }
+        zone: String
     });
 
     app.models.bid = bidSchema;

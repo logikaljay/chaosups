@@ -1,0 +1,115 @@
+<% if (item) { %>
+<!-- show the modal -->
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title"><%= item.name %> (<%= item.zone %>)</h4>
+</div>
+<div class="modal-body">
+    <div class="bids">
+    <% if (item.currentBid) { %>
+        <ul>
+            <li><b><%= item.currentBid.user.name %> - <%= item.currentBid.amount %></b></li>
+            <% if (item.previousBids) { %>
+                <% item.previousBids.reverse().forEach(function(previous) { %>
+                    <li><%= previous.user.name %> - <%= previous.amount %></li>
+                <% }); %>
+            <% } %>
+        </ul>
+
+    <% } else { %>
+        <p>No bids</p>
+    <% } %>
+    </div>
+
+    <% if (item.minimumBid <= points[item.zone].approved) { %>
+    <div class="form-group">
+        <input type='hidden' class='js-bid-max' value='<%= points[item.zone].approved %>' />
+        <input type='hidden' class='js-bid-min' value='<%= item.minimumBid %>' />
+        <input type='hidden' class='js-item-id' value='<%= item._id %>' />
+        <label for="yourBid" class="control-label">Your bid </label>
+        <input type="text" class="form-control js-item-bid" id="yourBid" placeholder="<%= item.minimumBid %>" />
+        <p class="help-block">
+            <b>Minimum</b> bid is <b><%= item.minimumBid %></b> <%= item.minimumBid == 1 ? "point" : "points" %>
+        </p>
+        <p class="help-block">
+            <b>Maximum</b> bid is <b><%= points[item.zone].approved %></b> <%= item.minimumBid == 1 ? "point" : "points" %>
+        </p>
+    </div>
+    <% } else { %>
+        <p>You don't have enough points to bid</p>
+    <% } %>
+
+</div>
+<div class="modal-footer">
+    <% if (item.minimumBid <= points[item.zone].approved) { %>
+        <button type="button" class="btn btn-primary btn-info js-place-bid" data-loading-text="Place bid <i class='glyphicon glyphicon-refresh glyphicon-refresh-animate'></i>" data-complete-text="Success <i class='glyphicon glyphicon-ok'></i>" data-failed-text="Failed <i class='glyphicon glyphion-remove'></i>">
+            Place bid
+        </button>
+    <% } %>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
+
+<% } else { %> 
+
+<!-- hide the modal -->
+<script type='text/javascript'>
+    $('#bid').modal('hide')
+</script>
+
+<% } %>
+
+<script type='text/javascript'>
+    $(".js-place-bid").on('click', function(e) {
+        var $this = $(this)
+          , loadingBtn = $this.button('loading')
+          , itemId = $(".js-item-id").val()
+          , bidValue = $(".js-item-bid").val()
+          , bidMaximum = $(".js-bid-max").val()
+          , bidMinimum = $(".js-bid-min").val()
+          , error = false;
+        
+        if (Number(bidValue) < Number(bidMinimum)) {
+            showError($this, "You cannot bid below the minimum bid");
+            error = true;
+        }
+
+
+        if (Number(bidValue) > Number(bidMaximum)) {
+            showError($this, "You don't have enough points for that");
+            error = true;
+        }
+
+        if (!error) {
+            $.post('/bid/' + itemId, { bid: bidValue }, function(data) {
+                if (data.status == "ok") {
+                    var currentBid = data.data.currentBid;
+                    var previousBids = data.data.previousBids;
+
+                    // rebuild bids list
+                    var currentBidHtml = "<li><b>" + currentBid.user.name + " - " + currentBid.amount + "</b></li>";
+                    var previousBidsHtml = "";
+                    previousBids.reverse().forEach(function(previous) {
+                        previousBidsHtml += "<li>" + previous.user.name + " - " + previous.amount + "</li>";
+                    });
+
+                    $(".bids").html(currentBidHtml + previousBidsHtml);
+                    $(".js-item-bid").val("");
+                    $this.button('complete');
+                    setTimeout(function() {
+                        $this.button('reset');
+                    }, 2000);
+                } else {
+                    // show error
+                    showError($this, data.message)
+                }
+            });
+        }
+    });
+
+    function showError($btn, error) {
+        $btn.button('failed');
+        setTimeout(function() {
+            $btn.button('reset');
+        }, 2000);
+    }
+</script>

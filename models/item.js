@@ -7,8 +7,9 @@ module.exports = function(app) {
         name: String,
         zone: String,
         minimumBid: Number,
-        currentBid: { type: Schema.Types.ObjectId, ref: 'Bid' }
-    });
+        currentBid: { type: Schema.Types.ObjectId, ref: 'Bid' },
+        previousBids: [{ type: Schema.Types.ObjectId, ref: 'Bid' }]
+    }, { strict: false });
 
     app.models.item = itemSchema;
 };

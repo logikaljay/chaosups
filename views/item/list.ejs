@@ -1,0 +1,84 @@
+<% layout('../layout') -%>
+<div class='container'>
+    <h1>Approved items</h1>
+    <% if (items) { %>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Zone</th>
+                <th>Current bid</th>
+                <th>Minimum bid</th>
+                <th>You can bid</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% items.forEach(function(item) { %>
+            <tr>
+                <td><%= item.name %></td>
+                <td><%= item.zone %></td>
+                <td><%= item.currentBid ? item.currentBid.amount : "N/a" %></td>
+                <td><%= item.minimumBid %></td>
+                <td><%= points[item.zone].approved %> (<%= item.zone %>)</td>
+                <td>
+                    <ul style='margin:0;padding:0;list-style:none;'>
+                        <li style="float:left;">
+                            <button type='button' class="btn btn-info" data-toggle="modal" data-remote="/bid/<%=item._id%>" data-target="#bid">Bid</button>
+                            &nbsp;
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <nav>
+        <ul class="pagination">
+            <li>
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li>
+                <a href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <% } %>
+    
+</div>
+
+<div id="bid" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script type="text/javascript">
+    $(function() {
+        $('button[data-toggle="modal"]').on('click', function(e) {
+            var target = $(e.currentTarget).data('target');
+            var remote = $(e.currentTarget).data('remote');
+            var modal = $(target);
+            var modalBody = $(target + " .modal-content");
+
+            modal.on('show.bs.modal', function() {
+                modalBody.load(remote);
+            }).modal();
+
+            return false;
+        });
+    });
+</script>
