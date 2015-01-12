@@ -84,7 +84,10 @@ module.exports = function(app) {
     app.post('/run/confirm', app.libs.restrict, function(req, res) {
         run = req.session.run;
         run.users = req.body.user;
-        run.items = req.body.items;
+        run.items = req.body.item;
+
+        run.runUsers = [];
+        run.runItems = [];
 
         // iterate over each user and if they don't exist - create them
         run.users.forEach(function(user) {
@@ -96,6 +99,10 @@ module.exports = function(app) {
                         app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
                             console.log('Added points to existing user: ' + user.name);
                         });
+
+                        if (userEntity !== null) {
+                            run.runUsers.push(userEntity);
+                        }
                     });
                 } else {
                     console.log("attempting to add user: " + user.name);
@@ -104,10 +111,28 @@ module.exports = function(app) {
                         app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
                             console.log('Added points to new user: ' + user.name);
                         });
+
+                        if (userEntity !== null) {
+                            run.runUsers.push(userEntity);
+                        }
                     });
                 }
             });
         });
+
+        // iterate over all the items, adding them
+        run.items.forEach(function(item) {
+            app.factory.items.add(item.name, item.value, run.zone, function(itemEntity) {
+                console.log('Added item: ' + item.name);
+
+                if (itemEntity !== null) {
+                    run.runItems.push(itemEntity);
+                }
+            });
+        });
+
+        // add the run
+        
 
         res.send('sent');
     });

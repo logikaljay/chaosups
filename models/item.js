@@ -5,11 +5,10 @@ module.exports = function(app) {
     var itemSchema = new Schema({
         state: Number,
         name: String,
-        zone: { type: Schema.Types.ObjectId, ref: 'Zone' },
-        run: { type: Schema.Types.ObjectId, ref: 'Run' },
+        zone: String,
+        minimumBid: Number,
         currentBid: { type: Schema.Types.ObjectId, ref: 'Bid' }
     });
 
     app.models.item = itemSchema;
 };
-
