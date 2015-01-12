@@ -3,4 +3,29 @@
     <% if (user) {  %>
         <%= user.name %>
     <% } %>
+
+    <% if (runs) { %>
+        <table>
+            <thead>
+            <tr>
+                <th>Zone</th>
+                <th>Date</th>
+                <th>Leader</th>
+                <th># items</th>
+                <th># players</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% runs.forEach(function(run) { %>
+                <tr>
+                    <td><%= run.zone %></td>
+                    <td><%= run.date %></td>
+                    <td><%= run.leader %></td>
+                    <td><%= run.items.length %></td>
+                    <td><%= run.users.length %></td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    <% } %>
 </div>

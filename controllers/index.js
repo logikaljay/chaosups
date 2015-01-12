@@ -2,7 +2,10 @@ var mongoose = require('mongoose');
 
 module.exports = function(app) {
     app.get('/', app.libs.restrict, function(req, res){
-        res.render('index');
+        // get runs
+        app.factory.runs.get(function(runs) {
+            res.render('index', { runs: runs });
+        });
     });
 
     app.get('/restricted', app.libs.restrict, function(req, res) {
