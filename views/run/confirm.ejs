@@ -75,9 +75,9 @@
 
         // iterate over all users
         var $users = $(".users");
-        $users.forEach(function($user) {
-            var name = $user.find('user-name').val();
-            var points = $user.find('user-points').val();
+        $users.each(function(index, $user) {
+            var name = $($user).find('.user-name').val();
+            var points = $($user).find('.user-points').val();
 
             // validate the name
             if (name.length == 0) {
@@ -97,9 +97,9 @@
         // iterate over all items
         var $items = $(".items");
 
-        $items.forEach(function($item) {
-            var name = $item.find('item-name').val();
-            var value = $item.find('item-value').val();
+        $items.each(function(index, $item) {
+            var name = $($item).find('.item-name').val();
+            var value = $($item).find('.item-value').val();
 
             if (name.length == 0) {
                 err.push({ element: $item, message: "Item must have a name "});
@@ -108,7 +108,7 @@
             if (isNaN(value)) {
                 err.push({ element: $item, message: "Item must have a value" });
             } else {
-                if (Number(points) < 1) {
+                if (Number(value) < 1) {
                     err.push({ element: $item, message: "Value must be a positive number" });
                 }
             }
