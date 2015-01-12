@@ -12,6 +12,7 @@ module.exports = function(app) {
            .populate("items")
            .populate("leader")
            .populate("points")
+           .sort({ date: -1 })
            .limit(6)
            .exec(function(err, docs) {
             if (err) {

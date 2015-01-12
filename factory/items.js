@@ -7,6 +7,7 @@ module.exports = function(app) {
         var Item = mongoose.model('Item', app.models.item);
         Item.find({})
             .limit(6)
+            .sort({ updatedAt: -1 })
             .exec(function(err, docs) {
             if (err) {
                 console.log('app.factory.items.getLatest ERROR: ' + err);

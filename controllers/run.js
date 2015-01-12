@@ -39,6 +39,14 @@ module.exports = function(app) {
         res.render('run/create', { zones: zones, users: users });
     });
 
+    app.get('/run/approve/:id', app.libs.restrictAdmin, function(req, res) {
+        res.send("approving run id: " + req.params.id);
+    });
+
+    app.get('/run/unapprove/:id', app.libs.restrictAdmin, function(req, res) {
+
+    });
+
     app.post('/run/create', app.libs.restrict, function(req, res) {
         console.log(req.body.days.toString());
 
