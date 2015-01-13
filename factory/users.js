@@ -59,6 +59,9 @@ module.exports = function(app) {
             return false;
         }
 
+        // all names need to be lowercase
+        name = name.toLowerCase();
+
         // create a new user that must change their password
         var User = mongoose.model('User', app.models.user);
         var newUser = new User({

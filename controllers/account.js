@@ -11,7 +11,9 @@ module.exports = function(app) {
     });
 
     app.post('/account/login', function(req, res) {
-        app.libs.authenticate(req.body.email, req.body.password, function(err, user) {
+        var user = req.body.email.toLowerCase();
+
+        app.libs.authenticate(user, req.body.password, function(err, user) {
             if (user) {
                 req.session.regenerate(function() {
                     var sessionUser = {

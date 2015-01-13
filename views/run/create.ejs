@@ -1,25 +1,45 @@
 <% layout('../layout') -%>
 <div class='container'>
-    <h1>create a run</h1>
+    <h1>Create a run</h1>
 
     <form id="form" action="/run/create" method="post">
-        <select name="zone" id="zone">
-            <option value=''>select</option>
-            <% zones.forEach(function(zone) { %>
-                <option value='<%= zone.name %>'><%= zone.name %></option>
-            <% }); %>
-        </select><br />
+        <div class="form-group">
+            <label for="zone">Select a zone</label><br />
+            <select class="form-control" name="zone" id="zone">
+                <option value=''>select</option>
+                <% zones.forEach(function(zone) { %>
+                    <option value='<%= zone.name %>'><%= zone.name %></option>
+                <% }); %>
+            </select>
+        </div>
+
         <div class='days'>
             <% zones.forEach(function(zone) { %>
                 <div class='<%= zone.name %>' style='display:none;'>
+                    <div class="form-group">
+                        <label for="days">Select the days</label><br />
                     <% zone.days.forEach(function(day) { %>
-                        <input name='days' class='<%= zone.name %>' type='checkbox' data-amount='<%= day.amount %>' value='<%= day.name %>|<%= day.amount %>'><%= day.name %></input>
+                        <label class="checkbox-inline">
+                            <input name='days' class='<%= zone.name %>' type='checkbox' data-amount='<%= day.amount %>' value='<%= day.name %>|<%= day.amount %>'>
+                                <%= day.name %>
+                            </input>
+                        </label>
                     <% }); %>
+                    </div>
                 </div>
             <% }); %>
         </div>
-        <textarea name='users' id="users"></textarea><br />
-        <textarea name='items' id="items"></textarea><br />
+        <div class="form-group">
+            <label for="users">Players</label><br />
+            <input type='text' class="form-control" data-role="tagsinput" name='users' id="users" />
+            <p class="help-block">Hit enter after typing a name to add it</p>
+        </div>
+
+        <div class="form-group">
+            <label for="items">Items</label>
+            <textarea name='items' class="form-control" id="items"></textarea>
+            <p class="help-block">One item per line</p>
+        </div>
 
         <button onclick="validate(); return false;">continue</button>
     </form>

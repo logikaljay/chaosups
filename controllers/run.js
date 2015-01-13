@@ -49,32 +49,17 @@ module.exports = function(app) {
         res.render('run/create', { zones: zones, users: users });
     });
 
-    app.get('/run/approve/:id', app.libs.restrictAdmin, function(req, res) {
-        var runId = req.params.id;
-
-        _updateRunState(runId, 0, function() {
-            res.redirect('back');
-        });
-    });
-
-    app.get('/run/unapprove/:id', app.libs.restrictAdmin, function(req, res) {
-        var runId = req.params.id;
-
-        _updateRunState(runId, 1, function() {
-            res.redirect('back');
-        });
-    });
-
     app.post('/run/create', app.libs.restrict, function(req, res) {
         console.log(req.body.days.toString());
 
         var zone = req.body.zone,
             tmpDays = req.body.days.toString(),
-            users = req.body.users,
+            users = req.body.users.toString(),
             items = req.body.items,
             points = 0,
             days = [];
 
+        // format days into an array of objects
         tmpDays = tmpDays.split(",");
         tmpDays.forEach(function(day) {
             day = day.toString().split("|");
@@ -82,11 +67,14 @@ module.exports = function(app) {
             points += Number(day[1]);
         });
 
+        // format users into array
+        users = users.split(",");
+
         // construct the temp run
         var run = {
             zone: zone,
             days: days,
-            users: users.split(" "),
+            users: users,
             items: items.split("\n"),
             points: points
         };
@@ -124,6 +112,22 @@ module.exports = function(app) {
                     res.redirect('/');
                 });
             })
+        });
+    });
+
+    app.get('/run/approve/:id', app.libs.restrictAdmin, function(req, res) {
+        var runId = req.params.id;
+
+        _updateRunState(runId, 0, function() {
+            res.redirect('back');
+        });
+    });
+
+    app.get('/run/unapprove/:id', app.libs.restrictAdmin, function(req, res) {
+        var runId = req.params.id;
+
+        _updateRunState(runId, 1, function() {
+            res.redirect('back');
         });
     });
 
