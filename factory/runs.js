@@ -36,6 +36,8 @@ module.exports = function(app) {
         var Item = mongoose.model('Item', app.models.item);
         var Point = mongoose.model('Point', app.models.point);
         var User = mongoose.model('User', app.models.user);
+        var Bid = mongoose.model('Bid', app.models.bid);
+
         Run.findById(runId)
            .populate("items")
            .populate("leader")
@@ -47,10 +49,16 @@ module.exports = function(app) {
                 console.log("app.factory.runs.getById ERROR: " + err);
             }
 
-            var options = {
+            var options = [{
                 path: 'points.user',
                 model: 'User'
-            };
+            }, {
+                path: 'items.currentBid',
+                model: 'Bid'
+            }, {
+                path: 'items.previousBids',
+                model: 'Bid'
+            }];
 
             Run.populate(docs, options, function(err, runs) {
                 fn(runs);

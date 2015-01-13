@@ -1,4 +1,5 @@
-var mongoose = require('mongoose');
+var async = require('async')
+  , mongoose = require('mongoose');
 
 module.exports = function(app) {
     var Schema = mongoose.Schema;
@@ -11,6 +12,35 @@ module.exports = function(app) {
         previousBids: [{ type: Schema.Types.ObjectId, ref: 'Bid' }],
         date: { type: Date, default: Date.now }
     }, { strict: false });
+
+    itemSchema.pre('remove', function(next) {
+        // cascade delete to currentBid and previousBids
+
+        var previousBids = this.previousBids;
+        if (this.currentBid) {
+            this.currentBid.remove(function(err) {
+                async.forEach(previousBids, function(bid, callback) {
+                    bid.remove(function(err) {
+                        callback();
+                    });
+                }, function(err) {
+                    next();
+                });
+            });
+        } else {
+            if (this.previousBids) {
+                async.forEach(previousBids, function(bid, callback) {
+                    bid.remove(function(err) {
+                        callback();
+                    });
+                }, function(err) {
+                    next();
+                });
+            } else {
+                next();
+            }
+        }
+    });
 
     app.models.item = itemSchema;
 };
