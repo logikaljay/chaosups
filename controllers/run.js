@@ -7,7 +7,17 @@ module.exports = function(app) {
     });
 
     app.get('/run/list', app.libs.restrict, function(req, res) {
-        // to be implmented
+        app.factory.runs.getAll(function(runs) {
+            var approved = runs.filter(function(run) {
+                return run.state == 0;
+            });
+
+            var unapproved = runs.filter(function(run) {
+                return run.state == 1;
+            });
+
+            res.render('run/list', { approved: approved, unapproved: unapproved });
+        });
     });
 
     app.get('/run/create', app.libs.restrict, function(req, res) {
