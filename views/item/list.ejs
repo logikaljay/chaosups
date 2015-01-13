@@ -11,17 +11,21 @@
                 <th>Current bid</th>
                 <th>Minimum bid</th>
                 <th>You can bid</th>
+                <th>Ending</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <% items.forEach(function(item) { %>
-            <tr>
+            <tr class='item-<%= item._id %>'>
                 <td><%= item.name %></td>
                 <td><%= item.zone %></td>
-                <td><%= item.currentBid ? item.currentBid.amount : "N/a" %></td>
-                <td><%= item.minimumBid %></td>
-                <td><%= points[item.zone].approved %> (<%= item.zone %>)</td>
+                <td class='js-bid-currentbid'><%= item.currentBid ? item.currentBid.amount : "N/a" %></td>
+                <td class='js-bid-minimumbid'><%= item.minimumBid %></td>
+                <td class='js-bid-maximumbid'><%= points[item.zone].approved %> (<%= item.zone %>)</td>
+                <td class='js-bid-ending'>
+                    <%= item.currentBid ? moment(item.currentBid.endDate).format("Do MMM HH:mm:ss") : "N/a" %><br />
+                    <%= item.currentBid ? moment(item.currentBid.endDate).fromNow() : "" %>
                 <td>
                     <ul style='margin:0;padding:0;list-style:none;'>
                         <li style="float:left;">
@@ -35,6 +39,7 @@
         </tbody>
     </table>
 
+    <!--
     <nav>
         <ul class="pagination">
             <li>
@@ -54,6 +59,7 @@
             </li>
         </ul>
     </nav>
+    -->
     <% } %>
     
 </div>

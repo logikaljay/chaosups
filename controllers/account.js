@@ -1,16 +1,16 @@
 module.exports = function(app) {
 
-    app.get('/login', function(req, res) {
+    app.get('/account/login', function(req, res) {
         var data = {
             title: 'Login',
             information: 'Please login before using chaosups',
             user: null
         };
 
-        res.render('login', data);
+        res.render('account/login', data);
     });
 
-    app.post('/login', function(req, res) {
+    app.post('/account/login', function(req, res) {
         app.libs.authenticate(req.body.email, req.body.password, function(err, user) {
             if (user) {
                 req.session.regenerate(function() {
@@ -21,18 +21,23 @@ module.exports = function(app) {
                         isAdmin: user.type == 2 ? true : false
                     };
                     req.session.user = sessionUser;
-                    res.redirect('/run/create');
+                    res.redirect('/');
                 });
             } else {
                 req.session.error = 'Authentication failed, please check your username and password.';
-                res.redirect('/login');
+                res.redirect('/account/login');
             }
         });
     });
 
-    app.get('/logout', app.libs.restrict, function(req, res) {
+    app.get('/account/edit', app.libs.restrict, function(req, res) {
+        res.render('account/edit');
+    });
+
+    app.get('/account/logout', app.libs.restrict, function(req, res) {
         req.session.destroy(function() {
             res.redirect('/');
         });
     });
+
 };

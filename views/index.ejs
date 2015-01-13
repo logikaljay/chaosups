@@ -34,6 +34,7 @@
                 <th>Item</th>
                 <th>Zone</th>
                 <th>State</th>
+                <th>Current bid</th>
                 <th>Minimum bid</th>
             </tr>
             </thead>
@@ -43,6 +44,7 @@
                     <td><%= item.name %></td>
                     <td><%= item.zone %></td>
                     <td><%= item.state == 0 ? "approved" : "unapproved" %>
+                    <td><%= item.currentBid ? item.currentBid.amount : "N/a" %></td>
                     <td><%= item.minimumBid %></td>
                 </tr>
             <% }); %>

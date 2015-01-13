@@ -27,7 +27,8 @@ module.exports = function(app) {
         var Item = mongoose.model('Item', app.models.item);
         var User = mongoose.model('User', app.models.user);
         var Bid = mongoose.model('Bid', app.models.bid);
-
+        var moment = app.locals.moment;
+        
         // get the current user
         app.factory.users.getById(userId, function(user) {
 
@@ -37,13 +38,21 @@ module.exports = function(app) {
                 var oldBid = item.currentBid;
                 item.previousBids.push(oldBid);
 
+                // check if someone is bidding in the last 12 hours
+                var endDate = oldBid.endDate;
+                var secondsRemaining = moment(endDate).seconds() - moment().seconds();
+                if (secondsRemaining <= (60 * 60 * 12)) {
+                    endDate = moment().add('1', 'd');
+                }
+
                 // create a new bid
                 var newBid = new Bid({
                     previous: [],
                     item: item,
                     user: user,
                     amount: value,
-                    zone: item.zone
+                    zone: item.zone,
+                    endDate: endDate
                 });
 
                 // save the bid
@@ -65,7 +74,7 @@ module.exports = function(app) {
                             fn(newItem);
                         });
                     });
-                })
+                });
 
             } else {
                 // create a new bid
@@ -73,7 +82,8 @@ module.exports = function(app) {
                     item: item,
                     user: user,
                     amount: value,
-                    zone: item.zone
+                    zone: item.zone,
+                    endDate: app.locals.moment().add(3, 'd')
                 });
 
                 newBid.save(function(err) {
@@ -90,7 +100,7 @@ module.exports = function(app) {
                         }
 
                         console.log("app.factory.bids.place item save ERROR: " + err);
-                        
+
                         app.factory.items.getById(item.id, function(newItem) {
                             fn(newItem);
                         });

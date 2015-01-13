@@ -51,15 +51,33 @@ module.exports = function(app) {
 
     app.factory.items.getLatest = function(fn) {
         var Item = mongoose.model('Item', app.models.item);
+        var Bid = mongoose.model('Bid', app.models.bid);
+        var User = mongoose.model('User', app.models.user);
+        
         Item.find({})
             .limit(6)
+            .populate('currentBid')
             .sort({ updatedAt: -1 })
             .exec(function(err, docs) {
             if (err) {
                 console.log('app.factory.items.getLatest ERROR: ' + err);
             }
 
-            fn(docs);
+            var options = {
+                path: 'currentBid.user',
+                model: 'User'
+            };
+
+            Item.populate(docs, options, function(err, item) {
+                var options = {
+                    path: 'previousBids.user',
+                    model: 'User'
+                };
+
+                Item.populate(item, options, function(err, results) {
+                    fn(results);
+                });
+            });
         });
     };
 

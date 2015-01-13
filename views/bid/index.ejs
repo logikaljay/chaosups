@@ -98,6 +98,9 @@
                     setTimeout(function() {
                         $this.button('reset');
                     }, 2000);
+
+                    // update parent item
+                    updateItem(currentBid, itemId, data.data.minimumBid, data.data.maximumBid, data.data.endDate, data.data.endDate_from);
                 } else {
                     // show error
                     showError($this, data.message)
@@ -105,6 +108,18 @@
             });
         }
     });
+
+    function updateItem(currentBid, itemId, minimumBid, maximumBid, endDate, endDate_from) {
+        $row = $(".item-" + itemId);
+        $currentBid = $row.find(".js-bid-currentbid");
+        $minimumBid = $row.find(".js-bid-minimumbid");
+        $maximumBid = $row.find(".js-bid-maximumbid");
+        $ending = $row.find(".ending");
+        $currentBid.text(currentBid.amount);
+        $minimumBid.text(minimumBid);
+        $maximumBid.text(maximumBid);
+        $ending.text(endDate + "<br />" + endDate_from);
+    }
 
     function showError($btn, error) {
         $btn.button('failed');
