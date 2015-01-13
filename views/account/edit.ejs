@@ -1,4 +1,76 @@
 <% layout('../layout') -%>
 <div class='container'>
     <h1>Edit account</h1>
+
+    <h3>Change password</h3>
+    
+    <% if (err) { %>
+        <% include ../partials/err -%>
+    <% } %>
+
+    <% if (msg) { %>
+        <% include ../partials/msg -%>
+    <% } %>
+
+    <form action="/account/edit" method="post">
+        <div class="form-group">
+            <label for="oldPassword">Old password</label>
+            <input type='password' name="oldPassword" id="oldPassword" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="newPassword">New password</label>
+            <input type='password' name="newPassword" id="newPassword" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="confirmPassword">Confirm password</label>
+            <input type='password' name="confirmPassword" id="confirmPassword" class="form-control" />
+        </div>
+
+        <button class='btn btn-info' onclick="validateChangePassword(); return false;">Change password</button>
+    </form>
 </div>
+
+<script type="text/javascript">
+    function validateChangePassword() {
+        var $oldPassword = $("#oldPassword")
+          , $newPassword = $("#newPassword")
+          , $confirmPassword = $("#confirmPassword")
+          , err = [];
+
+        // clear any previous errors
+        $(".error").remove();
+
+        // validate the old password
+        if ($oldPassword.val().length == 0) {
+            err.push({ element: $oldPassword, message: "You must supply your old password" });
+        }
+
+        // validate the new password
+        if ($newPassword.val().length == 0) {
+            err.push({ element: $newPassword, message: "New password cannot be blank" });
+        }
+
+        // validate the confirm password
+        if ($confirmPassword.val().length == 0) {
+            err.push({ element: $confirmPassword, message: "Confirm password cannot be blank" });
+        } else {
+            // validate new password and confirm password match
+            if ($newPassword.val() !== $confirmPassword.val()) {
+                err.push({ element: $confirmPassword, message: "Passwords do not match" });
+            }
+        }
+
+        // check if there were any errors
+        if (err.length == 0) {
+            // submit the form
+            $("form").submit();
+        } else {
+            // show the errors
+            err.forEach(function(error) {
+                $(error.element).after("<p class='error'>" + error.message + "</p>");
+            });
+        }
+    }
+</script>

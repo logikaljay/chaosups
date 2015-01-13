@@ -3,23 +3,27 @@
     <h1>User detail</h1>
 
     <% if (points) { %>
-        <h3><%= entity.name %>'s points</h3>
+        <h3><%= entity %>'s points</h3>
         <table class="table table-hover">
             <thead>
             <tr>
                 <th>Zone</th>
-                <th>Available</th>
-                <th>Unapproved</th>
-                <th>Used</th>
+                <th>Total <span class="small help-block">Available + Used</span></th>
+                <th>Available <span class="small help-block">Total - Used</span></th>
+                <th>Unapproved <span class="small help-block">Awaiting run approval</span></th>
+                <th>Used <span class="small help-block">Sum of current bids</span></th>
+                <th>Spent <span class="small help-block">Sum of spent points</span></th>
             </tr>
             </thead>
             <tbody>
             <% for (var zone in points) { %>
                 <tr>
                     <td width="100"><%= zone %></td>
+                    <td width="100"><%= points[zone]['total'] %></td>
                     <td width="100"><%= points[zone]['available'] %></td>
                     <td width="100"><%= points[zone]['unapproved'] %></td>
                     <td width="100"><%= points[zone]['used'] %></td>
+                    <td width="100"><%= points[zone]['spent'] %></td>
                 </tr>
             <% } %>
             </tbody>

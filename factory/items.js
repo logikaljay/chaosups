@@ -7,7 +7,7 @@ module.exports = function(app) {
         var Item = mongoose.model('Item', app.models.item);
         var Bid = mongoose.model('Bid', app.models.bid);
         Item.findById(itemId)
-            .sort({ updatedAt: -1 })
+            .sort({ date: -1 })
             .populate('currentBid')
             .populate('previousBids')
             .exec(function(err, doc) {
@@ -38,7 +38,7 @@ module.exports = function(app) {
         var Item = mongoose.model('Item', app.models.item);
         var Bid = mongoose.model('Bid', app.models.bid);
         Item.find({ state: state })
-            .sort({ updatedAt: -1 })
+            .sort({ date: -1 })
             .populate('currentBid')
             .exec(function(err, docs) {
             if (err) {
@@ -57,7 +57,7 @@ module.exports = function(app) {
         Item.find({})
             .limit(6)
             .populate('currentBid')
-            .sort({ updatedAt: -1 })
+            .sort({ date: -1 })
             .exec(function(err, docs) {
             if (err) {
                 console.log('app.factory.items.getLatest ERROR: ' + err);

@@ -88,12 +88,24 @@ module.exports = function(app) {
 
     app.factory.users._save = function(user, fn) {
         if (user === undefined) {
-            return false;
+            if (fn) {
+                fn(false);
+            } else {
+                return false;
+            }
         }
 
         // if we got this far - save our document
         user.save(function(err) {
-            if (err) return false;
+            if (err) {
+                console.log("app.factory.users._save ERROR: " + err);
+                
+                if (fn) {
+                    fn(false);
+                } else {
+                    return false;
+                }
+            }
 
             if (fn) {
                 fn(user);

@@ -1,0 +1,75 @@
+<% layout('../layout') -%>
+<div class='container'>
+    <h1><%= run.leader.name %>'s <%= run.zone %> run</h1>
+
+    <h3>Days and points</h3>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+            <% run.days.forEach(function(day) { %>
+                <tr>
+                    <td><%= run.zone %> - <%= day.name %></td>
+                    <td><%= day.amount %></td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+
+        <%
+        var i = 0;
+        %>
+        <h3>Players</h2>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% run.users.forEach(function(user) { %>
+                <tr class='users'>
+                    <td>
+                        <input type='text' class='form-control user-name' name='user[<%= i %>][name]' value='<%= user %>' disabled='disabled' />
+                    </td>
+                    <td>
+                        <input type='text' class='form-control user-points' name='user[<%= i %>][points]' value='<%= run.points %>' disabled='disabled' />
+                    </td>
+                </tr>
+                <%
+                    i++;
+                }); %>
+            </tbody>
+        </table>
+        <%
+        i = 0;
+        %>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% run.items.forEach(function(item) { %>
+                    <tr class='items'>
+                        <td>
+                            <input type='text' class='form-control item-name' name='item[<%= i %>][name]' value='<%= item %>'  disabled='disabled' />
+                        </td>
+                        <td>
+                            <input type='text' class='form-control item-value' name='item[<%= i %>][value]' value='1' disabled='disabled' />
+                        </td>
+                    </tr>
+                <%
+                    i++;
+                }); %>
+            </tbody>
+        </table>
+</div>

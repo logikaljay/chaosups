@@ -7,6 +7,7 @@ module.exports = function(app) {
         user: { type: Schema.Types.ObjectId, ref: 'User' },
         amount: Number,
         zone: String,
+        state: Number,
         endDate: { type: Date }
     });
 

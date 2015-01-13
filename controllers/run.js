@@ -20,6 +20,14 @@ module.exports = function(app) {
         });
     });
 
+    app.get('/run/detail/:id', app.libs.restrict, function(req, res) {
+        var runId = req.params.id;
+
+        app.factory.runs.getById(runId, function(run) {
+            res.render('run/detail', { run: run });
+        });
+    });
+
     app.get('/run/create', app.libs.restrict, function(req, res) {
         var zones = [
         {
@@ -102,6 +110,7 @@ module.exports = function(app) {
         run.items = req.body.item;
         run.leader = req.session.user.name;
 
+        run.runDays = req.days;
         run.runUsers = [];
         run.runItems = [];
         run.runPoints = [];
@@ -242,7 +251,7 @@ module.exports = function(app) {
         // get the leader
         app.factory.users.getByName(run.leader, function(userEntity) {
             console.log(run.runPoints);
-            app.factory.runs.add(userEntity, run.runUsers, run.runPoints, run.runItems, run.zone,
+            app.factory.runs.add(userEntity, run.runUsers, run.runPoints, run.runItems, run.zone, run.runDays,
                 function(runEntity) {
                     fn(runEntity);
                 });

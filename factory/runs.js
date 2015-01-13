@@ -85,7 +85,7 @@ module.exports = function(app) {
         })
     };
 
-    app.factory.runs.add = function(leader, users, points, items, zone, fn) {
+    app.factory.runs.add = function(leader, users, points, items, zone, days, fn) {
         var Run = mongoose.model('Run', app.models.run);
         var run = new Run({
             state: 1,
@@ -93,7 +93,8 @@ module.exports = function(app) {
             points: points,
             users: users,
             items: items,
-            zone: zone
+            zone: zone,
+            days: days
         });
 
         run.save(function(err) {

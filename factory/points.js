@@ -4,10 +4,11 @@ var async = require('async');
 module.exports = function(app) {
     app.factory.points = {};
 
-    app.factory.points.getAllByUserId = function(id, fn) {
+    app.factory.points.getAllByUserId = function(userId, fn) {
         var Run = mongoose.model('Run', app.models.run);
         var Points = mongoose.model('Point', app.models.point);
         var User = mongoose.model('User', app.models.user);
+        var Bid = mongoose.model('Bid', app.models.bid);
 
         Run.find()
             .populate("points")
@@ -33,29 +34,49 @@ module.exports = function(app) {
                     callback();
                 }, function(err) {
                     async.forEach(tmpPoints, function(point, callback) {
-                        if (point.user !== null && point.user._id == id) {
+                        if (point.user !== null && point.user._id == userId) {
                             if (points[point.zone] === undefined) {
                                 points[point.zone] = {};
                             }
 
+                            // Total points that would be available if no bids have been made
+                            if (points[point.zone].total === undefined) {
+                                points[point.zone].total = 0;
+                            }
+
+                            // Available points that are able to be spent at this moment
                             if (points[point.zone].available === undefined) {
                                 points[point.zone].available = 0;
                             }
 
+                            // Unapproved points that are waiting to be approved from runs
                             if (points[point.zone].unapproved === undefined) {
                                 points[point.zone].unapproved = 0;
                             }
 
+                            // Used points that have been used by bids, or spent points
                             if (points[point.zone].used === undefined) {
                                 points[point.zone].used = 0;
                             }
 
-                            if (point.state === 0) {
-                                points[point.zone].available += Number(point.amount);
+                            if (points[point.zone].spent === undefined) {
+                                points[point.zone].spent = 0;
                             }
 
+                            // Point state 0 == approved
+                            if (point.state === 0) {
+                                points[point.zone].available += Number(point.amount);
+                                points[point.zone].total += Number(point.amount);
+                            }
+
+                            // Point state 1 == unapproved
                             if (point.state == 1) {
                                 points[point.zone].unapproved += Number(point.amount);
+                            }
+
+                            // Point state 2 == spent
+                            if (point.state == 2) {
+                                points[point.zone].spent += Number(point.amount);
                             }
 
                             callback();
@@ -63,7 +84,16 @@ module.exports = function(app) {
                             callback();
                         }
                     }, function(err) {
-                        fn(points);
+                        // now we have our - get points that have been spent on bids
+                        app.factory.bids.getAllByUserId(userId, function(bids) {
+                            async.forEach(bids, function(bid, callback) {
+                                points[bid.zone].used = bid.amount;
+                                points[bid.zone].available = points[bid.zone].available - points[bid.zone].used;
+                                callback();
+                            }, function(err) {
+                                fn(points);
+                            });
+                        });
                     });
                 });
             });

@@ -10,7 +10,7 @@ module.exports = function(app) {
         var User = mongoose.model('User', app.models.user);
         var Bid = mongoose.model('Bid', app.models.bid);
 
-        Bid.find({ user: userId })
+        Bid.find({ user: userId, state: 0 })
            .populate('item')
            .populate('user')
            .exec(function(err, docs) {
@@ -50,44 +50,51 @@ module.exports = function(app) {
 
             // check if there is currently a bid
             if (item.currentBid) {
-                // roll the bid in to previous
+
+                // change the old bid state to 1 so its not a current bid
                 var oldBid = item.currentBid;
-                item.previousBids.push(oldBid);
+                oldBid.state = 1;
+                oldBid.save(function(err) {
 
-                // check if someone is bidding in the last 12 hours
-                var endDate = oldBid.endDate;
-                var secondsRemaining = moment(endDate).seconds() - moment().seconds();
-                if (secondsRemaining <= (60 * 60 * 12)) {
-                    endDate = moment().add('1', 'd');
-                }
+                    // add the old bid to the item's previous bids
+                    item.previousBids.push(oldBid);
 
-                // create a new bid
-                var newBid = new Bid({
-                    previous: [],
-                    item: item,
-                    user: user,
-                    amount: value,
-                    zone: item.zone,
-                    endDate: endDate
-                });
-
-                // save the bid
-                newBid.save(function(err) {
-                    if (err) {
-                        console.log("app.factory.bids.place new bid ERROR: " + err);
+                    // check if someone is bidding in the last 12 hours
+                    var endDate = oldBid.endDate;
+                    var secondsRemaining = moment(endDate).seconds() - moment().seconds();
+                    if (secondsRemaining <= (60 * 60 * 12)) {
+                        endDate = moment().add('1', 'd');
                     }
 
-                    item.currentBid = newBid;
-                    item.minimumBid = Math.ceil(Number(value) * 1.10);
+                    // create a new bid
+                    var newBid = new Bid({
+                        previous: [],
+                        item: item,
+                        user: user,
+                        amount: value,
+                        zone: item.zone,
+                        state: 0,
+                        endDate: endDate
+                    });
 
-                    // save the item
-                    item.save(function(err) {
+                    // save the bid
+                    newBid.save(function(err) {
                         if (err) {
-                            console.log("app.factory.bids.place save item ERROR: " + err);
+                            console.log("app.factory.bids.place new bid ERROR: " + err);
                         }
 
-                        app.factory.items.getById(item.id, function(newItem) {
-                            fn(newItem);
+                        item.currentBid = newBid;
+                        item.minimumBid = Math.ceil(Number(value) * 1.10);
+
+                        // save the item
+                        item.save(function(err) {
+                            if (err) {
+                                console.log("app.factory.bids.place save item ERROR: " + err);
+                            }
+
+                            app.factory.items.getById(item.id, function(newItem) {
+                                fn(newItem);
+                            });
                         });
                     });
                 });
@@ -99,6 +106,7 @@ module.exports = function(app) {
                     user: user,
                     amount: value,
                     zone: item.zone,
+                    state: 0,
                     endDate: app.locals.moment().add(3, 'd')
                 });
 
