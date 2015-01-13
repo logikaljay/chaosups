@@ -25,7 +25,15 @@ module.exports = function(app) {
     });
 
     app.get('/users/detail/:id', app.libs.restrict, function(req, res) {
+        var userId = req.params.id;
 
+        app.factory.users.getById(userId, function(user) {
+            app.factory.points.getAllByUserId(userId, function(points) {
+                app.factory.bids.getAllByUserId(userId, function(bids) {
+                    res.render('users/detail', { entity: user, points: points, bids: bids });
+                });
+            });
+        });
     });
 
     app.get('/users/lock/:id', app.libs.restrictAdmin, function(req, res) {

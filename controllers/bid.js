@@ -25,7 +25,7 @@ module.exports = function(app) {
                 
                 // check if the user actually has that many points
                 app.factory.points.getAllByUserId(userId, function(points) {
-                    if (points[item.zone].approved >= value) {
+                    if (points[item.zone].available >= value) {
                         var moment = app.locals.moment;
                         
                         // place the bid
@@ -37,7 +37,7 @@ module.exports = function(app) {
                                     minimumBid: newItem.minimumBid,
                                     currentBid: newItem.currentBid,
                                     previousBids: newItem.previousBids,
-                                    maximumBid: points[item.zone].approved,
+                                    maximumBid: points[item.zone].available,
                                     endDate: moment(newItem.currentBid.endDate).format("Do MMM HH:mm:ss"),
                                     endDate_from: moment(newItem.currentBid.endDate).fromNow()
                                 } 

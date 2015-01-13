@@ -21,9 +21,9 @@
     <% } %>
     </div>
 
-    <% if (item.minimumBid <= points[item.zone].approved) { %>
+    <% if (item.minimumBid <= points[item.zone].available) { %>
     <div class="form-group">
-        <input type='hidden' class='js-bid-max' value='<%= points[item.zone].approved %>' />
+        <input type='hidden' class='js-bid-max' value='<%= points[item.zone].available %>' />
         <input type='hidden' class='js-bid-min' value='<%= item.minimumBid %>' />
         <input type='hidden' class='js-item-id' value='<%= item._id %>' />
         <label for="yourBid" class="control-label">Your bid </label>
@@ -32,7 +32,7 @@
             <b>Minimum</b> bid is <b><%= item.minimumBid %></b> <%= item.minimumBid == 1 ? "point" : "points" %>
         </p>
         <p class="help-block">
-            <b>Maximum</b> bid is <b><%= points[item.zone].approved %></b> <%= item.minimumBid == 1 ? "point" : "points" %>
+            <b>Maximum</b> bid is <b><%= points[item.zone].available %></b> <%= item.minimumBid == 1 ? "point" : "points" %>
         </p>
     </div>
     <% } else { %>
@@ -41,7 +41,7 @@
 
 </div>
 <div class="modal-footer">
-    <% if (item.minimumBid <= points[item.zone].approved) { %>
+    <% if (item.minimumBid <= points[item.zone].available) { %>
         <button type="button" class="btn btn-primary btn-info js-place-bid" data-loading-text="Place bid <i class='glyphicon glyphicon-refresh glyphicon-refresh-animate'></i>" data-complete-text="Success <i class='glyphicon glyphicon-ok'></i>" data-failed-text="Failed <i class='glyphicon glyphion-remove'></i>">
             Place bid
         </button>

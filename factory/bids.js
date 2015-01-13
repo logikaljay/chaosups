@@ -5,6 +5,23 @@ var mongoose = require('mongoose')
 module.exports = function(app) {
     app.factory.bids = {};
 
+    app.factory.bids.getAllByUserId = function(userId, fn) {
+        var Item = mongoose.model('Item', app.models.item);
+        var User = mongoose.model('User', app.models.user);
+        var Bid = mongoose.model('Bid', app.models.bid);
+
+        Bid.find({ user: userId })
+           .populate('item')
+           .populate('user')
+           .exec(function(err, docs) {
+            if (err) {
+                console.log("app.factory.bids.getByItem ERROR: " + err);
+            }
+
+            fn(docs);
+        });
+    };
+
     app.factory.bids.getByItem = function(itemId, fn) {
         var Item = mongoose.model('Item', app.models.item);
         var User = mongoose.model('User', app.models.user);
@@ -13,7 +30,6 @@ module.exports = function(app) {
         Bid.find({ item: itemId })
            .populate('item')
            .populate('user')
-           .populate('previous')
            .exec(function(err, docs) {
             if (err) {
                 console.log("app.factory.bids.getByItem ERROR: " + err);

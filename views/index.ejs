@@ -2,13 +2,46 @@
 
 <div class="container">
     <h1>Dashboard</h1>
+    <% if (bids) { %>
+        <h3>Bids</h3>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Item</th>
+                <th>Current bid</th>
+                <th>Minimum bid</th>
+                <th>Ending</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <% if (bids.length == 0) { %>
+                <tr><td colspan="4"><p><%= entity.name %> has no current bids</p></td></tr>
+            <% } %>
+
+            <% bids.forEach(function(bid) { %>
+            <tr>
+                <td><%= bid.item.name %></td>
+                <td><%= bid.amount %></td>
+                <td><%= bid.item.minimumBid %></td>
+                <td>
+                    <%= moment(bid.endDate).format("Do MMM HH:mm:ss") %><br />
+                    <%= moment(bid.endDate).fromNow() %>
+                </td>
+            </tr>
+            <% }); %>
+            
+            </tbody>
+        </table>
+    <% } %>
+
     <% if (points) { %>
         <h3>Points</h3>
         <table class="table table-hover">
             <thead>
             <tr>
                 <th>Zone</th>
-                <th>Approved</th>
+                <th>Available</th>
                 <th>Unapproved</th>
                 <th>Used</th>
             </tr>
@@ -17,7 +50,7 @@
             <% for (var zone in points) { %>
                 <tr>
                     <td width="100"><%= zone %></td>
-                    <td width="100"><%= points[zone]['approved'] %></td>
+                    <td width="100"><%= points[zone]['available'] %></td>
                     <td width="100"><%= points[zone]['unapproved'] %></td>
                     <td width="100"><%= points[zone]['used'] %></td>
                 </tr>

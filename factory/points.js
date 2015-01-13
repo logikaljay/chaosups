@@ -38,8 +38,8 @@ module.exports = function(app) {
                                 points[point.zone] = {};
                             }
 
-                            if (points[point.zone].approved === undefined) {
-                                points[point.zone].approved = 0;
+                            if (points[point.zone].available === undefined) {
+                                points[point.zone].available = 0;
                             }
 
                             if (points[point.zone].unapproved === undefined) {
@@ -51,7 +51,7 @@ module.exports = function(app) {
                             }
 
                             if (point.state === 0) {
-                                points[point.zone].approved += Number(point.amount);
+                                points[point.zone].available += Number(point.amount);
                             }
 
                             if (point.state == 1) {

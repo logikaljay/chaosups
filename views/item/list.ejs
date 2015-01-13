@@ -22,7 +22,7 @@
                 <td><%= item.zone %></td>
                 <td class='js-bid-currentbid'><%= item.currentBid ? item.currentBid.amount : "N/a" %></td>
                 <td class='js-bid-minimumbid'><%= item.minimumBid %></td>
-                <td class='js-bid-maximumbid'><%= points[item.zone].approved %> (<%= item.zone %>)</td>
+                <td class='js-bid-maximumbid'><%= points[item.zone].available %> (<%= item.zone %>)</td>
                 <td class='js-bid-ending'>
                     <%= item.currentBid ? moment(item.currentBid.endDate).format("Do MMM HH:mm:ss") : "N/a" %><br />
                     <%= item.currentBid ? moment(item.currentBid.endDate).fromNow() : "" %>
@@ -85,6 +85,10 @@
             }).modal();
 
             return false;
+        });
+
+        $(document.body).on('hidden.bs.modal', function () {
+            $('#bid').removeData('bs.modal')
         });
     });
 </script>
