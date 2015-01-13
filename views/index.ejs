@@ -1,150 +1,149 @@
 <% layout('layout.ejs') -%>
 
-<div class="container">
-    <h1>Dashboard</h1>
-    <% if (bids) { %>
-        <h3>Bids</h3>
-        <table class="table table-hover">
-            <thead>
+
+<h1>Dashboard</h1>
+<% if (bids) { %>
+    <h3>Bids</h3>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Item</th>
+            <th>Current bid</th>
+            <th>Minimum bid</th>
+            <th>Ending</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <% if (bids.length == 0) { %>
+            <tr><td colspan="4"><p><%= user.name %> has no current bids</p></td></tr>
+        <% } %>
+
+        <% bids.forEach(function(bid) { %>
+        <tr>
+            <td><%= bid.item.name %></td>
+            <td><%= bid.amount %></td>
+            <td><%= bid.item.minimumBid %></td>
+            <td>
+                <%= moment(bid.endDate).format("Do MMM HH:mm:ss") %><br />
+                <%= moment(bid.endDate).fromNow() %>
+            </td>
+        </tr>
+        <% }); %>
+        
+        </tbody>
+    </table>
+<% } %>
+
+<% if (points) { %>
+    <h3>Points</h3>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Zone</th>
+            <th>Total <span class="small help-block">Available + Used</span></th>
+            <th>Available <span class="small help-block">Total - Used</span></th>
+            <th>Unapproved <span class="small help-block">Awaiting run approval</span></th>
+            <th>Used <span class="small help-block">Sum of current bids</span></th>
+            <th>Spent <span class="small help-block">Sum of spent points</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (var zone in points) { %>
             <tr>
-                <th>Item</th>
-                <th>Current bid</th>
-                <th>Minimum bid</th>
-                <th>Ending</th>
+                <td width="100"><%= zone %></td>
+                <td width="100"><%= points[zone]['total'] %></td>
+                <td width="100"><%= points[zone]['available'] %></td>
+                <td width="100"><%= points[zone]['unapproved'] %></td>
+                <td width="100"><%= points[zone]['used'] %></td>
+                <td width="100"><%= points[zone]['spent'] %></td>
             </tr>
-            </thead>
-            <tbody>
+        <% } %>
+        </tbody>
+    </table>
+<% } %>
 
-            <% if (bids.length == 0) { %>
-                <tr><td colspan="4"><p><%= user.name %> has no current bids</p></td></tr>
-            <% } %>
-
-            <% bids.forEach(function(bid) { %>
+<% if (items) { %>
+    <h3>Items</h3>
+    <table width="100%" class="table table-hover">
+        <thead>
+        <tr>
+            <th>Item</th>
+            <th>Zone</th>
+            <th>State</th>
+            <th>Current bid</th>
+            <th>Minimum bid</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% items.forEach(function(item) { %>
             <tr>
-                <td><%= bid.item.name %></td>
-                <td><%= bid.amount %></td>
-                <td><%= bid.item.minimumBid %></td>
+                <td><%= item.name %></td>
+                <td><%= item.zone %></td>
+                <td><%= item.state == 0 ? "approved" : "unapproved" %>
+                <td><%= item.currentBid ? item.currentBid.amount : "N/a" %></td>
+                <td><%= item.minimumBid %></td>
                 <td>
-                    <%= moment(bid.endDate).format("Do MMM HH:mm:ss") %><br />
-                    <%= moment(bid.endDate).fromNow() %>
+                <% if (item.state == 0) { %>
+                    <ul style='margin:0;padding:0;list-style:none;'>
+                        <li style="float:left;"><a class="btn btn-info" href="/item/list/<%=item._id%>">View</a>&nbsp;</li>
+                    </ul>
+                <% } %>
                 </td>
             </tr>
-            <% }); %>
-            
-            </tbody>
-        </table>
-    <% } %>
+        <% }); %>
+        </tbody>
+    </table>
+    <a href="/item/list">View all items</a>
+<% } %>
 
-    <% if (points) { %>
-        <h3>Points</h3>
-        <table class="table table-hover">
-            <thead>
+<% if (runs) { %>
+    <h3>Runs</h3>
+    <table width="100%" class="table table-hover">
+        <thead>
+        <tr>
+            <th>Zone</th>
+            <th>Date</th>
+            <th>Leader</th>
+            <th>Items</th>
+            <th>Players</th>
+            <th>State</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% runs.forEach(function(run) { %>
             <tr>
-                <th>Zone</th>
-                <th>Total <span class="small help-block">Available + Used</span></th>
-                <th>Available <span class="small help-block">Total - Used</span></th>
-                <th>Unapproved <span class="small help-block">Awaiting run approval</span></th>
-                <th>Used <span class="small help-block">Sum of current bids</span></th>
-                <th>Spent <span class="small help-block">Sum of spent points</span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <% for (var zone in points) { %>
-                <tr>
-                    <td width="100"><%= zone %></td>
-                    <td width="100"><%= points[zone]['total'] %></td>
-                    <td width="100"><%= points[zone]['available'] %></td>
-                    <td width="100"><%= points[zone]['unapproved'] %></td>
-                    <td width="100"><%= points[zone]['used'] %></td>
-                    <td width="100"><%= points[zone]['spent'] %></td>
-                </tr>
-            <% } %>
-            </tbody>
-        </table>
-    <% } %>
-
-    <% if (items) { %>
-        <h3>Items</h3>
-        <table width="100%" class="table table-hover">
-            <thead>
-            <tr>
-                <th>Item</th>
-                <th>Zone</th>
-                <th>State</th>
-                <th>Current bid</th>
-                <th>Minimum bid</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% items.forEach(function(item) { %>
-                <tr>
-                    <td><%= item.name %></td>
-                    <td><%= item.zone %></td>
-                    <td><%= item.state == 0 ? "approved" : "unapproved" %>
-                    <td><%= item.currentBid ? item.currentBid.amount : "N/a" %></td>
-                    <td><%= item.minimumBid %></td>
-                    <td>
-                    <% if (item.state == 0) { %>
-                        <ul style='margin:0;padding:0;list-style:none;'>
-                            <li style="float:left;"><a class="btn btn-info" href="/item/list/<%=item._id%>">View</a>&nbsp;</li>
+                <td><%= run.zone %></td>
+                <td><%= moment(run.date).format("MMM Do, HH:mm") %></td>
+                <td><%= run.leader !== null ? run.leader.name : "N/a" %></td>
+                <td><%= run.items.length %></td>
+                <td><%= run.points.map(function(point) { return point.user !== null ? point.user.name : "N/a" }) %></td>
+                <td><%= run.state == 0 ? "approved" : "unapproved" %></td>
+                <td>
+                <ul style='margin:0;padding:0;list-style:none;'>
+                    <li style="float:left;"><a class="btn btn-info" href="/run/detail/<%=run._id%>">View</a>&nbsp;</li>
+                    <% if (user.isAdmin) { %>
+                    <li style="float:left;" class="dropdown">
+                        <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a href="<%= run.state == 1 ? "/run/approve/" + run._id : "/run/unapprove/" + run._id %>">
+                                    <%= run.state == 1 ? "Approve" : "Unapprove" %>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a href="#">Edit</a></li>
+                            <li><a href="#" class='danger'>Delete</a></li>
                         </ul>
+                    </li>
                     <% } %>
-                    </td>
-                </tr>
-            <% }); %>
-            </tbody>
-        </table>
-        <a href="/item/list">View all items</a>
-    <% } %>
-
-    <% if (runs) { %>
-        <h3>Runs</h3>
-        <table width="100%" class="table table-hover">
-            <thead>
-            <tr>
-                <th>Zone</th>
-                <th>Date</th>
-                <th>Leader</th>
-                <th>Items</th>
-                <th>Players</th>
-                <th>State</th>
-                <th>Action</th>
+                </ul>
+                </td>
             </tr>
-            </thead>
-            <tbody>
-            <% runs.forEach(function(run) { %>
-                <tr>
-                    <td><%= run.zone %></td>
-                    <td><%= moment(run.date).format("MMM Do, HH:mm") %></td>
-                    <td><%= run.leader !== null ? run.leader.name : "N/a" %></td>
-                    <td><%= run.items.length %></td>
-                    <td><%= run.points.map(function(point) { return point.user !== null ? point.user.name : "N/a" }) %></td>
-                    <td><%= run.state == 0 ? "approved" : "unapproved" %></td>
-                    <td>
-                    <ul style='margin:0;padding:0;list-style:none;'>
-                        <li style="float:left;"><a class="btn btn-info" href="/run/detail/<%=run._id%>">View</a>&nbsp;</li>
-                        <% if (user.isAdmin) { %>
-                        <li style="float:left;" class="dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="<%= run.state == 1 ? "/run/approve/" + run._id : "/run/unapprove/" + run._id %>">
-                                        <%= run.state == 1 ? "Approve" : "Unapprove" %>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li><a href="#">Edit</a></li>
-                                <li><a href="#" class='danger'>Delete</a></li>
-                            </ul>
-                        </li>
-                        <% } %>
-                    </ul>
-                    </td>
-                </tr>
-            <% }); %>
-            </tbody>
-        </table>
-        <a href="/run/list">View all runs</a>
-    <% } %>
-</div>
+        <% }); %>
+        </tbody>
+    </table>
+    <a href="/run/list">View all runs</a>
+<% } %>

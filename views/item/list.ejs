@@ -1,68 +1,68 @@
 <% layout('../layout') -%>
-<div class='container'>
-    <h1>Approved items</h1>
-    <% if (items) { %>
 
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>Item</th>
-                <th>Zone</th>
-                <th>Current bid</th>
-                <th>Minimum bid</th>
-                <th>You can bid</th>
-                <th>Ending</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% items.forEach(function(item) { %>
-            <tr class='item-<%= item._id %>'>
-                <td><%= item.name %></td>
-                <td><%= item.zone %></td>
-                <td class='js-bid-currentbid'><%= item.currentBid ? item.currentBid.amount : "N/a" %></td>
-                <td class='js-bid-minimumbid'><%= item.minimumBid %></td>
-                <td class='js-bid-maximumbid'><%= points[item.zone].available %> (<%= item.zone %>)</td>
-                <td class='js-bid-ending'>
-                    <%= item.currentBid ? moment(item.currentBid.endDate).format("Do MMM HH:mm:ss") : "N/a" %><br />
-                    <%= item.currentBid ? moment(item.currentBid.endDate).fromNow() : "" %>
-                <td>
-                    <ul style='margin:0;padding:0;list-style:none;'>
-                        <li style="float:left;">
-                            <button type='button' class="btn btn-info" data-toggle="modal" data-remote="/bid/<%=item._id%>" data-target="#bid">Bid</button>
-                            &nbsp;
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-            <% }); %>
-        </tbody>
-    </table>
+<h1>Approved items</h1>
+<% if (items) { %>
 
-    <!--
-    <nav>
-        <ul class="pagination">
-            <li>
-                <a href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li>
-                <a href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-    -->
-    <% } %>
-    
-</div>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Zone</th>
+            <th>Current bid</th>
+            <th>Minimum bid</th>
+            <th>You can bid</th>
+            <th>Ending</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% items.forEach(function(item) { %>
+        <tr class='item-<%= item._id %>'>
+            <td><%= item.name %></td>
+            <td><%= item.zone %></td>
+            <td class='js-bid-currentbid'><%= item.currentBid ? item.currentBid.amount : "N/a" %></td>
+            <td class='js-bid-minimumbid'><%= item.minimumBid %></td>
+            <td class='js-bid-maximumbid'><%= points[item.zone].available %> (<%= item.zone %>)</td>
+            <td class='js-bid-ending'>
+                <%= item.currentBid ? moment(item.currentBid.endDate).format("Do MMM HH:mm:ss") : "N/a" %><br />
+                <%= item.currentBid ? moment(item.currentBid.endDate).fromNow() : "" %>
+            <td>
+                <ul style='margin:0;padding:0;list-style:none;'>
+                    <li style="float:left;">
+                        <button type='button' class="btn btn-info" data-toggle="modal" data-remote="/bid/<%=item._id%>" data-target="#bid">Bid</button>
+                        &nbsp;
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <% }); %>
+    </tbody>
+</table>
+
+<!--
+<nav>
+    <ul class="pagination">
+        <li>
+            <a href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li>
+            <a href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+-->
+<% } %>
+
+
 
 <div id="bid" class="modal fade">
   <div class="modal-dialog">

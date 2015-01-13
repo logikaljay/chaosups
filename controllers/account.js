@@ -1,10 +1,23 @@
 module.exports = function(app) {
 
     app.get('/account/login', function(req, res) {
+        var msg = "";
+        var err = "";
+        if (req.session.err) {
+            err = req.session.err;
+            delete req.session.err;
+        }
+
+        if (req.session.msg) {
+            msg = req.session.msg;
+            delete req.session.msg;
+        }
+
         var data = {
             title: 'Login',
-            information: 'Please login before using chaosups',
-            user: null
+            user: null,
+            err: err,
+            msg: msg
         };
 
         res.render('account/login', data);

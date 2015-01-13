@@ -1,144 +1,142 @@
 <% layout('../layout') -%>
-<div class='container'>
-    <h1>Users</h1>
-    <h3>Admins</h3>
-    <table class='table table-hover'>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% admins.forEach(function(entity) { %>
-                <tr>
-                    <td><%= entity.name %></td>
-                    <td>
-                    <ul style='margin:0;padding:0;list-style:none;'>
-                        <li style="float:left;"><a class="btn btn-info" href="/users/detail/<%=entity._id%>">View</a>&nbsp;</li>
-                    <% if (user.isAdmin) { %>
-                        <li style="float:left;" class="dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Edit</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#" class='danger'>Delete</a></li>
-                            </ul>
-                        </li>
-                    <% } %>
-                    </ul>
-                    </td>
-                </tr>
-            <% }); %>
-        </tbody>
-    </table>
 
-    <% if (gatekeepers.length > 0) { %>
-    <h3>Gate keepers</h3>
-    <table class='table table-hover'>
-        <thead>
+<h1>Users</h1>
+<h3>Admins</h3>
+<table class='table table-hover'>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% admins.forEach(function(entity) { %>
             <tr>
-                <th>Name</th>
-                <th>Action</th>
+                <td><%= entity.name %></td>
+                <td>
+                <ul style='margin:0;padding:0;list-style:none;'>
+                    <li style="float:left;"><a class="btn btn-info" href="/users/detail/<%=entity._id%>">View</a>&nbsp;</li>
+                <% if (user.isAdmin) { %>
+                    <li style="float:left;" class="dropdown">
+                        <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Edit</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" class='danger'>Delete</a></li>
+                        </ul>
+                    </li>
+                <% } %>
+                </ul>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <% gatekeepers.forEach(function(entity) { %>
-                <tr>
-                    <td><%= entity.name %></td>
-                    <td>
-                    <ul style='margin:0;padding:0;list-style:none;'>
-                        <li style="float:left;"><a class="btn btn-info" href="/users/detail/<%=entity._id%>">View</a>&nbsp;</li>
-                    <% if (user.isAdmin) { %>
-                        <li style="float:left;" class="dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Edit</a></li>
-                                <li><a href="#">Reset Password</a></li>
-                                <li><a href="/users/lock/<%= entity._id %>">Lock</li>
-                                <li class="divider"></li>
-                                <li><a href="#" class='danger'>Delete</a></li>
-                            </ul>
-                        </li>
-                    <% } %>
-                    </ul>
-                    </td>
-                </tr>
-            <% }); %>
-        </tbody>
-    </table>
-    <% } %>
+        <% }); %>
+    </tbody>
+</table>
 
-    <h3>Active users</h3>
-    <table class='table table-hover'>
-        <thead>
+<% if (gatekeepers.length > 0) { %>
+<h3>Gate keepers</h3>
+<table class='table table-hover'>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% gatekeepers.forEach(function(entity) { %>
             <tr>
-                <th>Name</th>
-                <th>Action</th>
+                <td><%= entity.name %></td>
+                <td>
+                <ul style='margin:0;padding:0;list-style:none;'>
+                    <li style="float:left;"><a class="btn btn-info" href="/users/detail/<%=entity._id%>">View</a>&nbsp;</li>
+                <% if (user.isAdmin) { %>
+                    <li style="float:left;" class="dropdown">
+                        <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Edit</a></li>
+                            <li><a href="#">Reset Password</a></li>
+                            <li><a href="/users/lock/<%= entity._id %>">Lock</li>
+                            <li class="divider"></li>
+                            <li><a href="#" class='danger'>Delete</a></li>
+                        </ul>
+                    </li>
+                <% } %>
+                </ul>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <% normal.forEach(function(entity) { %>
-                <tr>
-                    <td><%= entity.name %></td>
-                    <td>
-                    <ul style='margin:0;padding:0;list-style:none;'>
-                        <li style="float:left;"><a class="btn btn-info" href="/users/detail/<%=entity._id%>">View</a>&nbsp;</li>
-                    <% if (user.isAdmin) { %>
-                        <li style="float:left;" class="dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Edit</a></li>
-                                <li><a href="#">Reset Password</a></li>
-                                <li><a href="/users/lock/<%= entity._id %>">Lock</li>
-                                <li class="divider"></li>
-                                <li><a href="#" class='danger'>Delete</a></li>
-                            </ul>
-                        </li>
-                    <% } %>
-                    </ul>
-                    </td>
-                </tr>
-            <% }); %>
-        </tbody>
-    </table>
+        <% }); %>
+    </tbody>
+</table>
+<% } %>
 
-    <h3>Locked users</h3>
-    <table class='table table-hover'>
-        <thead>
+<h3>Active users</h3>
+<table class='table table-hover'>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% normal.forEach(function(entity) { %>
             <tr>
-                <th>Name</th>
-                <th>Action</th>
+                <td><%= entity.name %></td>
+                <td>
+                <ul style='margin:0;padding:0;list-style:none;'>
+                    <li style="float:left;"><a class="btn btn-info" href="/users/detail/<%=entity._id%>">View</a>&nbsp;</li>
+                <% if (user.isAdmin) { %>
+                    <li style="float:left;" class="dropdown">
+                        <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Edit</a></li>
+                            <li><a href="#">Reset Password</a></li>
+                            <li><a href="/users/lock/<%= entity._id %>">Lock</li>
+                            <li class="divider"></li>
+                            <li><a href="#" class='danger'>Delete</a></li>
+                        </ul>
+                    </li>
+                <% } %>
+                </ul>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <% disabled.forEach(function(entity) { %>
-                <tr>
-                    <td><%= entity.name %></td>
-                    <td>
-                    <ul style='margin:0;padding:0;list-style:none;'>
-                        <li style="float:left;"><a class="btn btn-info" href="/users/detail/<%=entity._id%>">View</a>&nbsp;</li>
-                    <% if (user.isAdmin) { %>
-                        <li style="float:left;" class="dropdown">
-                            <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Edit</a></li>
-                                <li><a href="#">Reset Password</a></li>
-                                <li>
-                                    <a href="<%= entity.state !== 2 ? "/users/lock/" + entity._id : "/users/unlock/" + entity._id %>">
-                                        <%= entity.state !== 2 ? "Lock" : "Unlock" %>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                                <li><a href="#" class='danger'>Delete</a></li>
-                            </ul>
-                        </li>
-                    <% } %>
-                    </ul>
-                    </td>
-                </tr>
-            <% }); %>
-        </tbody>
-    </table>
+        <% }); %>
+    </tbody>
+</table>
 
-</div>
+<h3>Locked users</h3>
+<table class='table table-hover'>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% disabled.forEach(function(entity) { %>
+            <tr>
+                <td><%= entity.name %></td>
+                <td>
+                <ul style='margin:0;padding:0;list-style:none;'>
+                    <li style="float:left;"><a class="btn btn-info" href="/users/detail/<%=entity._id%>">View</a>&nbsp;</li>
+                <% if (user.isAdmin) { %>
+                    <li style="float:left;" class="dropdown">
+                        <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Edit</a></li>
+                            <li><a href="#">Reset Password</a></li>
+                            <li>
+                                <a href="<%= entity.state !== 2 ? "/users/lock/" + entity._id : "/users/unlock/" + entity._id %>">
+                                    <%= entity.state !== 2 ? "Lock" : "Unlock" %>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a href="#" class='danger'>Delete</a></li>
+                        </ul>
+                    </li>
+                <% } %>
+                </ul>
+                </td>
+            </tr>
+        <% }); %>
+    </tbody>
+</table>
