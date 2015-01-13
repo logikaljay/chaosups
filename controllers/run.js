@@ -87,6 +87,8 @@ module.exports = function(app) {
             points: points
         };
 
+        console.log(run);
+
         // save the temp run to the session
         req.session.run = run;
 
@@ -109,6 +111,8 @@ module.exports = function(app) {
         run.users = req.body.user;
         run.items = req.body.item;
         run.leader = req.session.user.name;
+
+        console.log(run.users);
 
         run.runDays = req.days;
         run.runUsers = [];
@@ -136,6 +140,14 @@ module.exports = function(app) {
         var runId = req.params.id;
 
         _updateRunState(runId, 1, function() {
+            res.redirect('back');
+        });
+    });
+
+    app.get('/run/delete/:id', app.libs.restrictAdmin, function(req, res) {
+        var runId = req.params.id;
+
+        app.factory.runs.delete(runId, function() {
             res.redirect('back');
         });
     });
@@ -185,44 +197,51 @@ module.exports = function(app) {
     };
 
     _addUsersAndPoints = function(run, users, fn) {
+        console.log("# users: " + users.length);
+
         // iterate over each user and if they don't exist - create them
         async.forEach(users, function(user, callback) {
             app.factory.users.exists(user.name, function(exists) {
+                console.log(user.name + " exists: " + exists);
                 if (exists) {
                     // get the user
                     app.factory.users.getByName(user.name, function(userEntity) {
+                        console.log(userEntity);
+
                         // add the user to the run
                         if (userEntity !== null) {
                             run.runUsers.push(userEntity);
-                        }
+                        
+                            // add points to the user
+                            app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
+                                if (pointEntity !== null) {
+                                    run.runPoints.push(pointEntity);
+                                }
 
-                        // add points to the user
-                        app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
-                            console.log('added ' + pointEntity.amount + ' points to ' + userEntity.name);
-                            if (pointEntity !== null) {
-                                run.runPoints.push(pointEntity);
-                            }
-
+                                callback();
+                            });
+                        } else {
                             callback();
-                        });
-
+                        }
                     });
                 } else {
                     app.factory.users.add(user.name, function(userEntity) {
                         // add the user to the run
                         if (userEntity !== null) {
                             run.runUsers.push(userEntity);
-                        }
+                        
+                            // add points to the user
+                            app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
+                                if (pointEntity !== null) {
+                                    console.log('added ' + pointEntity.amount + ' points to ' + userEntity.name);
+                                    run.runPoints.push(pointEntity);
+                                }
 
-                        // add points to the user
-                        app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
-                            console.log('added ' + pointEntity.amount + ' points  to ' + userEntity.name);
-                            if (pointEntity !== null) {
-                                run.runPoints.push(pointEntity);
-                            }
-
+                                callback();
+                            }); 
+                        } else {
                             callback();
-                        }); 
+                        }
                     });
                 }
             });

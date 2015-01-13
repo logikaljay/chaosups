@@ -39,8 +39,14 @@ module.exports = function(app) {
     app.factory.users.exists = function(name, fn) {
         var User = mongoose.model('User', app.models.user);
         User.findOne({ name: name }, function(err, doc) {
-            if (err) fn(false);
-            if (doc !== null) fn(true);
+            if (err) {
+                console.log("app.factory.users.exists ERROR: " + err);
+                return fn(false);
+            }
+
+            if (doc !== null) {
+                return fn(true);
+            }
 
             fn(false);
         });
@@ -99,12 +105,6 @@ module.exports = function(app) {
         user.save(function(err) {
             if (err) {
                 console.log("app.factory.users._save ERROR: " + err);
-                
-                if (fn) {
-                    fn(false);
-                } else {
-                    return false;
-                }
             }
 
             if (fn) {

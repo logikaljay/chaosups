@@ -115,6 +115,9 @@ module.exports = function(app) {
         if (user == null) {
             console.log("app.factory.points.add ERROR: user was null");
             fn(null);
+        } else if (user == false) {
+            console.log("app.factory.points.add ERROR: user was not a user");
+            fn(null);
         } else {
             // create the points entry
             var Points = mongoose.model('Point', app.models.point);

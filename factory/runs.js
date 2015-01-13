@@ -105,4 +105,48 @@ module.exports = function(app) {
             fn(run);
         });
     };
+
+    app.factory.runs.delete = function(runId, fn) {
+        // get the run
+
+        app.factory.runs.getById(runId, function(run) {
+            run.remove(function(err) {
+                if (err) {
+                    console.log('app.factory.runs.delete ERROR: ' + err);
+                }
+
+                fn();
+            });
+        });
+
+        /*
+        app.factory.runs.getById(runId, function(run) {
+            // remove the items
+            async.forEach(run.items, function(item, callback) {
+                item.remove(function(err) {
+                    if (err) {
+                        console.log('app.factory.runs.delete remove item ERROR: ' + err);
+                    }
+
+                    callback();
+                });
+            }, function(err) {
+
+                // remove the points
+                async.forEach(run.points, function(point, callback) {
+                    point.remove(function(err) {
+                        if (err) {
+                            console.log('app.facotry')
+                        }
+                        callback();
+                    });
+                }, function(err) {
+
+                });
+
+            });
+
+        });
+        */
+    }
 };
