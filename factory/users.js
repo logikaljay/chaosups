@@ -4,6 +4,14 @@ var util = require('util');
 module.exports = function(app) {
     app.factory.users = {};
 
+    app.factory.users.getAll = function(fn) {
+        var User = mongoose.model('User', app.models.user);
+        User.find({}, function(err, docs) {
+            if (err) fn(undefined);
+            fn(docs);
+        });
+    };
+
     app.factory.users.getById = function(id, fn) {
         var User = mongoose.model('User', app.models.user);
         User.findById(id, function(err, doc) {

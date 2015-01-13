@@ -18,6 +18,7 @@
         <li class="<%= url == "/" ? "active" : "" %>"><a href="/">Dashboard <span class="sr-only">(current)</span></a></li>
         <li class="<%= url == "/run/create" ? "active" : "" %>"><a href="/run/create">Create a run</a></li>
         <li class="<%= url == "/run/list" ? "active" : "" %>"><a href="/run/list">Runs</a></li>
+        <li class="<%= url.indexOf("/users") > -1 ? "active" : "" %>"><a href="/users/list">Users</a></li>
         <li class="<%= url == "/item/list" ? "active" : "" %>"><a href="/item/list">Items</a></li>
       </ul>
       
