@@ -8,7 +8,19 @@ module.exports = function(app) {
         // get items, and points
         app.factory.items.getByState(0, function(items) {
             app.factory.points.getAllByUserId(userId, function(points) {
-                res.render('item/list', { items: items, points: points });
+                res.render('item/list', { items: items, points: points, itemId: null });
+            });
+        });
+    });
+
+    app.get('/item/list/:itemId', app.libs.restrict, function(req, res) {
+        var userId = req.session.user.id;
+        var itemId = req.params.itemId;
+        
+        // get items, and points
+        app.factory.items.getByState(0, function(items) {
+            app.factory.points.getAllByUserId(userId, function(points) {
+                res.render('item/list', { items: items, points: points, itemId: itemId });
             });
         });
     });

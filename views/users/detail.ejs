@@ -35,6 +35,7 @@
                 <th>Current bid</th>
                 <th>Minimum bid</th>
                 <th>Ending</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -51,6 +52,9 @@
                 <td>
                     <%= moment(bid.endDate).format("Do MMM HH:mm:ss") %><br />
                     <%= moment(bid.endDate).fromNow() %>
+                </td>
+                <td>
+                    <a class='btn btn-info' href="/item/list/<%= bid.item._id %>">View</a>
                 </td>
             </tr>
             <% }); %>

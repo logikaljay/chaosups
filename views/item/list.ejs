@@ -72,6 +72,14 @@
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<% if (itemId) { %>
+<script type="text/javascript">
+    $(function() {
+        $("tr.item-<%= itemId %>").find('button').trigger('click');
+    });
+</script>
+<% } %>
+
 <script type="text/javascript">
     $(function() {
         $('button[data-toggle="modal"]').on('click', function(e) {
