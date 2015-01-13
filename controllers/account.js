@@ -15,25 +15,29 @@ module.exports = function(app) {
 
         app.libs.authenticate(user, req.body.password, function(err, user) {
             if (user) {
-                req.session.regenerate(function() {
-                    var sessionUser = {
-                        name: user.name,
-                        points: user.points,
-                        id: user._id,
-                        isAdmin: user.type == 2 ? true : false
-                    };
-                    req.session.user = sessionUser;
+                app.libs.addSessionUser(req, user, function() {
                     res.redirect('/');
                 });
             } else {
-                req.session.error = 'Authentication failed, please check your username and password.';
+                req.session.err = 'Authentication failed, please check your username and password.';
                 res.redirect('/account/login');
             }
         });
     });
 
     app.get('/account/edit', app.libs.restrict, function(req, res) {
-        res.render('account/edit', { err: "", msg: "" });
+        var msg = "";
+        var err = "";
+
+        if (req.session.msg) {
+            msg = req.session.msg;
+        }
+
+        if (req.session.err) {
+            err = req.session.err;
+        };
+
+        res.render('account/edit', { err: err, msg: msg });
     });
 
     app.post('/account/edit', app.libs.restrict, function(req, res) {
@@ -55,15 +59,23 @@ module.exports = function(app) {
                     app.libs.hash(newPassword, function(err, salt, hash) {
                         if (err) return false;
 
+                        // set the new password salt and hash
                         user.salt = salt;
                         user.hash = hash.toString();
+
+                        // undo force password change
+                        if (user.state == 3) {
+                            user.state = 1;
+                        }
 
                         // save this user
                         app.factory.users._save(user, function(user) {
                             if (user == false) {
                                 res.render('account/edit', { err: "Something went wrong while trying to update your password.", msg: "" });
                             } else {
-                                res.render('account/edit', { err: "", msg: "Your password was changed successfully" });
+                                app.libs.addSessionUser(req, user, function() {
+                                    res.render('account/edit', { err: "", msg: "Your password was changed successfully" });
+                                });
                             }
                         });
                     });
