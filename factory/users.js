@@ -30,14 +30,6 @@ module.exports = function(app) {
         });
     };
 
-    app.factory.users.getAll = function(fn) {
-        var User = mongoose.model('User', app.models.user);
-        User.find({}, function(err, docs) {
-            if (err) fn(undefined);
-            fn(docs);
-        });
-    };
-
     app.factory.users.exists = function(name, fn) {
         name = name.toLowerCase();
 

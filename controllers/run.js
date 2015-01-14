@@ -29,32 +29,16 @@ module.exports = function(app) {
     });
 
     app.get('/run/create', app.libs.restrict, function(req, res) {
-        var zones = [
-        {
-            name: 'zone1',
-            days: [
-            {
-                name: "1",
-                amount: 10
-            }]
-        },{
-            name:'zone2',
-            days: [
-            {
-                name: "1",
-                amount: 10
-            },{
-                name: "2",
-                amount: 5
-            }, {
-                name: "3",
-                amount: 7
-            }]
-        }];
-
-        var users = ['jay', 'bob', 'jim', 'paul', 'smith'];
-
-        res.render('run/create', { zones: zones, users: users });
+        var zones = app.factory.zones;
+        var users = app.factory.users.getAll(function(users) {
+            var userNames = [];
+            async.forEach(users, function(user, callback) {
+                userNames.push(user.name);
+                callback();
+            }, function(err) {
+                res.render('run/create', { zones: zones, users: userNames });
+            });
+        });
     });
 
     app.post('/run/create', app.libs.restrict, function(req, res) {

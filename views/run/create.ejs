@@ -44,6 +44,8 @@
 
 
 <script type='text/javascript'>
+var users = JSON.parse('<%- JSON.stringify(users) %>');
+
 $("#zone").on('change', function() {
     var zone = $(this).val();
     $(".days>div").hide();
