@@ -154,10 +154,8 @@ module.exports = function(app) {
 
                     item.save(function(err) {
                         if (err) {
-                            console.log()
+                            console.log("app.factory.bids.place item save ERROR: " + err);
                         }
-
-                        console.log("app.factory.bids.place item save ERROR: " + err);
 
                         app.factory.items.getById(item.id, function(newItem) {
                             fn(newItem);

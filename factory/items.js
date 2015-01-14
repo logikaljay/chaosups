@@ -27,7 +27,6 @@ module.exports = function(app) {
                 };
 
                 Item.populate(item, options, function(err, result) {
-                    console.log(result);
                     fn(result);
                 });
             });

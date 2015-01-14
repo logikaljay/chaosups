@@ -139,7 +139,6 @@ module.exports = function(app) {
                 amount: Number(points)
             });
 
-            console.log('saving newPoints: ' + newPoints);
             newPoints.save(function(err) {
                 if (err) {
                     console.log('app.factory.points.add ERROR: ' + err);

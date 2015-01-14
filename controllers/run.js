@@ -58,8 +58,6 @@ module.exports = function(app) {
     });
 
     app.post('/run/create', app.libs.restrict, function(req, res) {
-        console.log(req.body.days.toString());
-
         var zone = req.body.zone,
             tmpDays = req.body.days.toString(),
             users = req.body.users.toString(),
@@ -109,7 +107,7 @@ module.exports = function(app) {
         run.users = req.body.user;
         run.items = req.body.item;
         run.leader = req.session.user.name;
-        
+
         run.runDays = req.days;
         run.runUsers = [];
         run.runItems = [];
@@ -225,7 +223,6 @@ module.exports = function(app) {
                             // add points to the user
                             app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
                                 if (pointEntity !== null) {
-                                    console.log('added ' + pointEntity.amount + ' points to ' + userEntity.name);
                                     run.runPoints.push(pointEntity);
                                 }
 
@@ -261,7 +258,8 @@ module.exports = function(app) {
     _addRun = function(run, fn) {
         // get the leader
         app.factory.users.getByName(run.leader, function(userEntity) {
-            console.log(run.runPoints);
+
+            // add the run
             app.factory.runs.add(userEntity, run.runUsers, run.runPoints, run.runItems, run.zone, run.runDays,
                 function(runEntity) {
                     fn(runEntity);
