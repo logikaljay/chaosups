@@ -1,12 +1,13 @@
 <% layout('layout.ejs') -%>
 
-
-<h1>Dashboard</h1>
 <% if (wonItems && wonItems.length > 0) { %>
+    <section>
     <p>You have <%= wonItems.length %> items waiting to be sent<br /><a href="/items/list">Click here to see them</a></p>
+    </section>
 <% } %>
 
 <% if (bids) { %>
+    <section>
     <h3>Bids</h3>
     <table class="table table-hover">
         <thead>
@@ -37,9 +38,11 @@
         
         </tbody>
     </table>
+    </section>
 <% } %>
 
 <% if (points) { %>
+    <section>
     <h3>Points</h3>
     <table class="table table-hover">
         <thead>
@@ -65,9 +68,11 @@
         <% } %>
         </tbody>
     </table>
+    </section>
 <% } %>
 
 <% if (items) { %>
+    <section>
     <h3>Items</h3>
     <table width="100%" class="table table-hover">
         <thead>
@@ -85,7 +90,7 @@
             <tr>
                 <td><%= item.name %></td>
                 <td><%= item.zone %></td>
-                <td><%= item.state == 0 ? "approved" : "unapproved" %>
+                <td><%= item.state == 0 ? "approved" : "unapproved" %></td>
                 <td><%= item.currentBid ? item.currentBid.amount : "N/a" %></td>
                 <td><%= item.minimumBid %></td>
                 <td>
@@ -99,10 +104,12 @@
         <% }); %>
         </tbody>
     </table>
-    <a href="/item/list">View all items</a>
+    <a href="/items/list">View all items</a>
+    </section>
 <% } %>
 
 <% if (runs) { %>
+    <section>
     <h3>Runs</h3>
     <table width="100%" class="table table-hover">
         <thead>
@@ -150,4 +157,5 @@
         </tbody>
     </table>
     <a href="/run/list">View all runs</a>
+    </section>
 <% } %>

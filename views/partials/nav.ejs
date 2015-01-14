@@ -19,7 +19,23 @@
         <li class="<%= url == "/run/create" ? "active" : "" %>"><a href="/run/create">Create a run</a></li>
         <li class="<%= url == "/run/list" ? "active" : "" %>"><a href="/run/list">Runs</a></li>
         <li class="<%= url.indexOf("/users") > -1 ? "active" : "" %>"><a href="/users/list">Users</a></li>
-        <li class="<%= url == "/item/list" ? "active" : "" %>"><a href="/item/list">Items</a></li>
+
+        <% if (user.isAdmin) { %>
+        <li class="<%= url.indexOf("/items") > -1 ? "active" : "" %> dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            Items 
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/items/list">Auctions</a></li>
+            <li class="divider"></li>
+            <li><a href="/items/unsent">Items need sending</a></li>
+            <li><a href="/items/sent">Sent items</a></li>
+          </ul>
+        </li>
+        <% } else { %>
+        <li class="<%= url == "/items/list" ? "active" : "" %>"><a href="/items/list">Items</a></li>
+        <% } %>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">

@@ -1,0 +1,39 @@
+<% layout('../layout') -%>
+<% if (items) { %>
+    <h3>Sent items</h3>
+    <table class='table table-hover'>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Player</th>
+                <th>Closed</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% items.forEach(function(item) { %>
+            <tr>
+                <td><%= item.name %></td>
+                <td><%= item.currentBid.user.name %></td>
+                <td><%= moment(item.currentBid.endDate).fromNow() %></td>
+                <td>
+                <ul style='margin:0;padding:0;list-style:none;'>
+                    <li>
+                        <a class='btn btn-info btn-send' data-loading-text="Saving <i class='glyphicon glyphicon-refresh glyphicon-refresh-animate'></i>"  href="<%= item.state == 2 ? "/items/send/" + item._id : "/items/unsend/" + item._id %>">
+                            <%= item.state == 2 ? "Send to " + item.currentBid.user.name : "Unsend" %>
+                        </a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+<% } %>
+
+<script type="text/javascript">
+    $('.btn-send').on('click', function() {
+        $this = $(this);
+        $this.button("loading");
+    });
+</script>

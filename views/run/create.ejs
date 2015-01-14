@@ -1,7 +1,5 @@
 <% layout('../layout') -%>
 
-<h1>Create a run</h1>
-
 <form id="form" action="/run/create" method="post">
     <div class="form-group">
         <label for="zone">Select a zone</label><br />
@@ -41,7 +39,7 @@
         <p class="help-block">One item per line</p>
     </div>
 
-    <button onclick="validate(); return false;">continue</button>
+    <button class='btn btn-info' onclick="validate(); return false;">continue</button>
 </form>
 
 

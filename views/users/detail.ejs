@@ -1,7 +1,5 @@
 <% layout('../layout') -%>
 
-<h1>User detail</h1>
-
 <% if (points) { %>
     <h3><%= entity %>'s points</h3>
     <table class="table table-hover">
@@ -58,7 +56,7 @@
                 <%= moment(bid.endDate).fromNow() %>
             </td>
             <td>
-                <a class='btn btn-info' href="/item/list/<%= bid.item._id %>">View</a>
+                <a class='btn btn-info' href="/items/list/<%= bid.item._id %>">View</a>
             </td>
         </tr>
         <% }); %>

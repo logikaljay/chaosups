@@ -1,6 +1,6 @@
 <% layout('../layout') -%>
 
-<% if (unapproved) { %>
+<% if (unapproved && unapproved.length > 0) { %>
     <h3>Unapproved runs</h3>
     <table width="100%" class="table table-hover">
         <thead>

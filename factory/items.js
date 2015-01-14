@@ -38,6 +38,7 @@ module.exports = function(app) {
         var Item = mongoose.model('Item', app.models.item);
         var Bid = mongoose.model('Bid', app.models.bid);
         Item.find({ state: state })
+            .populate('currentBid')
             .sort({ date: -1 })
             .populate('currentBid')
             .exec(function(err, docs) {
@@ -45,7 +46,17 @@ module.exports = function(app) {
                 console.log('app.factory.items.getByState ERROR: ' + err);
             }
 
-            fn(docs);
+            var options = [{
+                path: 'currentBid.user',
+                model: 'User'
+            },{
+                path: 'previousBids.user',
+                model: 'User'
+            }];
+
+            Item.populate(docs, options, function(err, items) {
+                fn(items);
+            });
         });
     }
 
