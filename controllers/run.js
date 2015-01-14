@@ -87,8 +87,6 @@ module.exports = function(app) {
             points: points
         };
 
-        console.log(run);
-
         // save the temp run to the session
         req.session.run = run;
 
@@ -111,8 +109,6 @@ module.exports = function(app) {
         run.users = req.body.user;
         run.items = req.body.item;
         run.leader = req.session.user.name;
-
-        console.log(run.users);
 
         run.runDays = req.days;
         run.runUsers = [];
