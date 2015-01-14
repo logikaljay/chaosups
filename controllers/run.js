@@ -109,7 +109,7 @@ module.exports = function(app) {
         run.users = req.body.user;
         run.items = req.body.item;
         run.leader = req.session.user.name;
-
+        
         run.runDays = req.days;
         run.runUsers = [];
         run.runItems = [];
@@ -193,16 +193,12 @@ module.exports = function(app) {
     };
 
     _addUsersAndPoints = function(run, users, fn) {
-        console.log("# users: " + users.length);
-
         // iterate over each user and if they don't exist - create them
         async.forEach(users, function(user, callback) {
             app.factory.users.exists(user.name, function(exists) {
-                console.log(user.name + " exists: " + exists);
                 if (exists) {
                     // get the user
                     app.factory.users.getByName(user.name, function(userEntity) {
-                        console.log(userEntity);
 
                         // add the user to the run
                         if (userEntity !== null) {

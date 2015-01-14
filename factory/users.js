@@ -21,6 +21,8 @@ module.exports = function(app) {
     };
 
     app.factory.users.getByName = function(name, fn) {
+        name = name.toLowerCase();
+        
         var User = mongoose.model('User', app.models.user);
         User.findOne({ name: name }, function(err, doc) {
             if (err) fn(undefined);
@@ -37,6 +39,8 @@ module.exports = function(app) {
     };
 
     app.factory.users.exists = function(name, fn) {
+        name = name.toLowerCase();
+
         var User = mongoose.model('User', app.models.user);
         User.findOne({ name: name }, function(err, doc) {
             if (err) {
