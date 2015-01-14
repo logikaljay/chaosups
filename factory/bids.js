@@ -5,6 +5,23 @@ var mongoose = require('mongoose')
 module.exports = function(app) {
     app.factory.bids = {};
 
+    app.factory.bids.getAll = function(fn) {
+        var Item = mongoose.model('Item', app.models.item);
+        var User = mongoose.model('User', app.models.user);
+        var Bid = mongoose.model('Bid', app.models.bid);
+
+        Bid.find({ state: 0 })
+           .populate('item')
+           .populate('user')
+           .exec(function(err, docs) {
+            if (err) {
+                console.log('app.factory.bids.getAll ERROR: ' + err);
+            }
+            
+            fn(docs);
+        });
+    }
+
     app.factory.bids.getAllByUserId = function(userId, fn) {
         var Item = mongoose.model('Item', app.models.item);
         var User = mongoose.model('User', app.models.user);
@@ -15,19 +32,36 @@ module.exports = function(app) {
            .populate('user')
            .exec(function(err, docs) {
             if (err) {
-                console.log("app.factory.bids.getByItem ERROR: " + err);
+                console.log("app.factory.bids.getAllByUserId ERROR: " + err);
             }
 
             fn(docs);
         });
     };
 
+    app.factory.bids.getAllFinishedByUserId = function(userId, fn) {
+        var Item = mongoose.model('Item', app.models.item);
+        var User = mongoose.model('User', app.models.user);
+        var Bid = mongoose.model('Bid', app.models.bid);
+
+        Bid.find({ user: userId, state: 1 })
+           .populate('item')
+           .populate('user')
+           .exec(function(err, docs) {
+            if (err) {
+                console.log("app.factory.bids.getAllFinishedByUserId ERROR: " + err);
+            }
+
+            fn(docs);
+        });
+    }
+
     app.factory.bids.getByItem = function(itemId, fn) {
         var Item = mongoose.model('Item', app.models.item);
         var User = mongoose.model('User', app.models.user);
         var Bid = mongoose.model('Bid', app.models.bid);
 
-        Bid.find({ item: itemId })
+        Bid.find({ item: itemId, state: 0 })
            .populate('item')
            .populate('user')
            .exec(function(err, docs) {
@@ -107,7 +141,7 @@ module.exports = function(app) {
                     amount: value,
                     zone: item.zone,
                     state: 0,
-                    endDate: app.locals.moment().add(3, 'd')
+                    endDate: app.locals.moment().add(3, 'm')
                 });
 
                 newBid.save(function(err) {

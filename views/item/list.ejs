@@ -1,6 +1,30 @@
 <% layout('../layout') -%>
+<% if (wonItems && wonItems.length > 0) { %>
+    <h3>Won items (unsent)</h3>
+    <table class='table table-hover'>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Zone</th>
+                <th>Points</th>
+                <th>Closed</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% wonItems.forEach(function(item) { %>
+            <tr>
+                <td><%= item.name %></td>
+                <td><%= item.zone %></td>
+                <td><%= item.currentBid.amount %></td>
+                <td><%= moment(item.currentBid.endDate).fromNow() %></td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+<% } %>
 
-<h1>Approved items</h1>
+<h3>Approved items</h3>
+
 <% if (items) { %>
 
 <table class="table table-hover">

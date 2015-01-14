@@ -2,6 +2,10 @@
 
 
 <h1>Dashboard</h1>
+<% if (wonItems && wonItems.length > 0) { %>
+    <p>You have <%= wonItems.length %> items waiting to be sent<br /><a href="/items/list">Click here to see them</a></p>
+<% } %>
+
 <% if (bids) { %>
     <h3>Bids</h3>
     <table class="table table-hover">

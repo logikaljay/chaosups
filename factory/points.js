@@ -84,16 +84,27 @@ module.exports = function(app) {
                             callback();
                         }
                     }, function(err) {
-                        // now we have our - get points that have been spent on bids
+                        // now we have our points array - get points that have been used by current bids
                         app.factory.bids.getAllByUserId(userId, function(bids) {
                             async.forEach(bids, function(bid, callback) {
                                 points[bid.zone].used = bid.amount;
-                                points[bid.zone].available = points[bid.zone].available - points[bid.zone].used;
+                                points[bid.zone].available = points[bid.zone].available - bid.amount;
                                 callback();
                             }, function(err) {
-                                fn(points);
+                                // now get all the points spent on finished bids
+                                app.factory.bids.getAllFinishedByUserId(userId, function(finishedBids) {
+                                    async.forEach(finishedBids, function(bid, callback) {
+                                        points[bid.zone].spent += bid.amount;
+                                        points[bid.zone].available = points[bid.zone].available - bid.amount;
+                                        points[bid.zone].total = points[bid.zone].total - bid.amount;
+                                        callback();
+                                    }, function(err) {
+                                        fn(points);
+                                    });
+                                });
                             });
                         });
+
                     });
                 });
             });

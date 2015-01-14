@@ -4,8 +4,8 @@ var async = require('async');
 module.exports = function(app) {
     app.get('/', app.libs.restrict, function(req, res){
         // load user points and inject into the session
-        _getRuns(req, function(runs, points, items, bids) {
-            res.render('index', { runs: runs, points: points, items: items, bids: bids });
+        _getRuns(req, function(runs, points, items, wonItems, bids) {
+            res.render('index', { runs: runs, points: points, items: items, bids: bids, wonItems: wonItems });
         });
     });
     
@@ -33,7 +33,15 @@ module.exports = function(app) {
 
     _getItems = function(req, runs, points, bids, fn) {
         app.factory.items.getLatest(function(items) {
-            fn(runs, points, items, bids);
+            _getWonItems(req, runs, points, bids, items, fn);
         });
     };
+
+    _getWonItems = function(req, runs, points, bids, items, fn) {
+        var userId = req.session.user.id;
+
+        app.factory.items.getWonByUserId(userId, function(wonItems) {
+            fn(runs, points, items, wonItems, bids);
+        });
+    }
 };

@@ -8,7 +8,9 @@ module.exports = function(app) {
         // get items, and points
         app.factory.items.getByState(0, function(items) {
             app.factory.points.getAllByUserId(userId, function(points) {
-                res.render('item/list', { items: items, points: points, itemId: null });
+                app.factory.items.getWonByUserId(userId, function(wonItems) {
+                    res.render('item/list', { items: items, points: points, wonItems: wonItems, itemId: null });
+                });
             });
         });
     });
@@ -20,7 +22,9 @@ module.exports = function(app) {
         // get items, and points
         app.factory.items.getByState(0, function(items) {
             app.factory.points.getAllByUserId(userId, function(points) {
-                res.render('item/list', { items: items, points: points, itemId: itemId });
+                app.factory.items.getWonByUserId(userId, function(wonItems) {
+                    res.render('item/list', { items: items, points: points, wonItems: wonItems, itemId: itemId });
+                });
             });
         });
     });
