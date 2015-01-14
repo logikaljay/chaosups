@@ -15,17 +15,19 @@ var i = 0;
         </tr>
     </thead>
     <tbody>
-        <% run.users.forEach(function(user) { %>
+        <% run.points.forEach(function(point) {
+            if (point.user) { %>
         <tr class='users'>
             <td>
-                <input type='text' class='form-control user-name' name='user[<%= i %>][name]' value='<%= user %>' disabled='disabled' />
+                <input type='text' class='form-control user-name' name='user[<%= i %>][name]' value='<%= point.user.name %>' disabled='disabled' />
             </td>
             <td>
-                <input type='text' class='form-control user-points' name='user[<%= i %>][points]' value='<%= run.points %>' disabled='disabled' />
+                <input type='text' class='form-control user-points' name='user[<%= i %>][points]' value='<%= point.amount %>' disabled='disabled' />
             </td>
         </tr>
         <%
             i++;
+            }
         }); %>
     </tbody>
 </table>
@@ -43,10 +45,10 @@ i = 0;
         <% run.items.forEach(function(item) { %>
             <tr class='items'>
                 <td>
-                    <input type='text' class='form-control item-name' name='item[<%= i %>][name]' value='<%= item %>'  disabled='disabled' />
+                    <input type='text' class='form-control item-name' name='item[<%= i %>][name]' value='<%= item.name %>'  disabled='disabled' />
                 </td>
                 <td>
-                    <input type='text' class='form-control item-value' name='item[<%= i %>][value]' value='1' disabled='disabled' />
+                    <input type='text' class='form-control item-value' name='item[<%= i %>][value]' value='<%= item.minimumBid %>' disabled='disabled' />
                 </td>
             </tr>
         <%
