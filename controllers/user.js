@@ -1,5 +1,5 @@
-var async = require('async')
-  , util = require('util');
+var async = require('async'),
+    util = require('util');
 
 module.exports = function(app) {
     app.get('/users/list', app.libs.restrict, function(req, res) {
@@ -13,8 +13,8 @@ module.exports = function(app) {
             });
 
             var normal = users.filter(function(user) {
-                return user.type == 0 && user.state !== 2;
-            })
+                return user.type === 0 && user.state !== 2;
+            });
 
             var disabled = users.filter(function(user) {
                 return user.state == 2;
@@ -43,7 +43,7 @@ module.exports = function(app) {
 
             app.factory.users._save(user, function() {
                 res.redirect('/users/list');
-            })
+            });
         });
     });
 
@@ -54,7 +54,32 @@ module.exports = function(app) {
 
             app.factory.users._save(user, function() {
                 res.redirect('/users/list');
-            })
+            });
         });
     });
-}
+
+    app.post('/users/reset/:id', app.libs.restrictAdmin, function(req, res) {
+        var userId = req.params.id;
+        var userMustChange = req.body.mustChange;
+        var newPassword = req.body.newPassword;
+
+        app.factory.users.getById(userId, function(user) {
+            // generate a hash for the user
+            app.libs.hash(newPassword, function(err, salt, hash) {
+                if (err) return false;
+
+                // set the new password salt and hash
+                user.salt = salt;
+                user.hash = hash.toString();
+
+                if (userMustChange) {
+                    user.state = 3;
+                }
+
+                user.save(function(err) {
+                    res.redirect('back');
+                });
+            });
+        });
+    });
+};

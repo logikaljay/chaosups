@@ -53,7 +53,7 @@
                         <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="#">Edit (TBC)</a></li>
-                            <li><a href="#">Reset Password (TBC)</a></li>
+                            <li><a href="#resetPassword" class="js-reset" data-toggle="modal" data-id='<%=entity._id%>'>Reset Password</a></li>
                             <li><a href="/users/lock/<%= entity._id %>">Lock</li>
                             <li class="divider"></li>
                             <li><a href="#" class='danger'>Delete</a></li>
@@ -88,7 +88,7 @@
                         <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="#">Edit (TBC)</a></li>
-                            <li><a href="#">Reset Password (TBC)</a></li>
+                            <li><a href="#resetPassword" class="js-reset" data-toggle="modal" data-id='<%=entity._id%>'>Reset Password</a></li>
                             <li><a href="/users/lock/<%= entity._id %>">Lock</li>
                             <li class="divider"></li>
                             <li><a href="#" class='danger'>Delete</a></li>
@@ -122,7 +122,7 @@
                         <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="#">Edit (TBC)</a></li>
-                            <li><a href="#">Reset Password (TBC)</a></li>
+                            <li><a href="#resetPassword" class="js-reset" data-toggle="modal" data-id='<%=entity._id%>'>Reset Password</a></li>
                             <li>
                                 <a href="<%= entity.state !== 2 ? "/users/lock/" + entity._id : "/users/unlock/" + entity._id %>">
                                     <%= entity.state !== 2 ? "Lock" : "Unlock" %>
@@ -139,3 +139,49 @@
         <% }); %>
     </tbody>
 </table>
+
+<div id="resetPassword" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Reset Password</h4>
+            </div>
+
+            <div class="modal-body">
+                <form method="post" class='js-reset-form'>
+                    <div class='form-group'>
+                        <label class='control-label' for='password'>New password</label>
+                        <input class='form-control' id='password' name='newPassword' type='password' />
+                    </div>
+
+                    <div class='form-group'>
+                        <label class="checkbox-inline">
+                            <input name='userMustChange' type='checkbox' value='true'>
+                                User must change password
+                            </input>
+                        </label>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-info js-reset-password">Reset password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+    $(".js-reset").on('click', function() {
+        var userId = $(this).data('id');
+
+        $(".js-reset-form").attr('action', '/users/reset/' + userId);
+    });
+
+    $(".js-reset-password").on('click', function() {
+        $(".js-reset-form").submit();
+    });
+});
+</script>

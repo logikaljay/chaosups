@@ -102,7 +102,7 @@ module.exports = function(app) {
                 _addRun(run, function(entity) {
                     res.redirect('/');
                 });
-            })
+            });
         });
     });
 
@@ -185,7 +185,7 @@ module.exports = function(app) {
                         // add the user to the run
                         if (userEntity !== null) {
                             run.runUsers.push(userEntity);
-                        
+
                             // add points to the user
                             app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
                                 if (pointEntity !== null) {
@@ -203,7 +203,7 @@ module.exports = function(app) {
                         // add the user to the run
                         if (userEntity !== null) {
                             run.runUsers.push(userEntity);
-                        
+
                             // add points to the user
                             app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
                                 if (pointEntity !== null) {
@@ -211,7 +211,7 @@ module.exports = function(app) {
                                 }
 
                                 callback();
-                            }); 
+                            });
                         } else {
                             callback();
                         }
