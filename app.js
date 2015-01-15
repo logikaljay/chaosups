@@ -7,6 +7,7 @@ var fs = require('fs')
   , path = require('path')
   , mongoose = require('mongoose')
   , express = require('express')
+  , SessionStore = require('session-mongoose')(express)
   , bodyParser = require('body-parser')
   , engine = require('ejs-locals')
   , moment = require('moment')
@@ -54,6 +55,13 @@ fs.readdir(factoryDir, function(err, files) {
     });
 });
 
+// Session store configuration
+var sessionStore = new SessionStore({
+    interval: 120000, // expiration check worker run interval in millisec (default: 60000)
+    modelName: "session",
+    connection: mongoose.connection // <== custom connection
+});
+
 // Configuration
 app.locals.moment = moment;
 app.engine('ejs', engine);
@@ -67,7 +75,11 @@ app.use(express.urlencoded());
 app.use(bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('shhhhh, 1234 secrets inside'));
-app.use(express.session({secret: 'shhhhh, 1234 secrets inside'}));
+app.use(express.session({
+  secret: 'shhhh, 1234 secrets inside',
+  store: sessionStore,
+  cookie: { maxAge: 15 * 60 * 1000 }
+}));
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 

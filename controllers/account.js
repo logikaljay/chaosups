@@ -25,6 +25,7 @@ module.exports = function(app) {
 
     app.post('/account/login', function(req, res) {
         var user = req.body.email.toLowerCase();
+        var rememberMe = req.body.rememberMe;
 
         app.libs.authenticate(user, req.body.password, function(err, user) {
             if (user) {
