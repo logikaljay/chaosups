@@ -95,8 +95,8 @@ module.exports = function(app) {
 
                     // check if someone is bidding in the last 12 hours
                     var endDate = oldBid.endDate;
-                    var secondsRemaining = moment(endDate).seconds() - moment().seconds();
-                    if (secondsRemaining <= (60 * 60 * 12)) {
+                    var secondsRemaining = moment(endDate).format('x') - moment().format('x');
+                    if (secondsRemaining < (60 * 60 * 12)) {
                         endDate = moment().add('1', 'd');
                     }
 
@@ -141,7 +141,7 @@ module.exports = function(app) {
                     amount: value,
                     zone: item.zone,
                     state: 0,
-                    endDate: app.locals.moment().add(3, 'm')
+                    endDate: app.locals.moment().add(3, 'd')
                 });
 
                 newBid.save(function(err) {
