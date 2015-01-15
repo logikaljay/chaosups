@@ -1,0 +1,101 @@
+#!/bin/bash
+
+# ups - Startup script for ups
+
+# chkconfig: 35 85 15
+# description: Mongo is a scalable, document-oriented database.
+# processname: ups
+# config: /etc/ups.conf
+# pidfile: /var/run/upsb/ups.pid
+
+. /etc/rc.d/init.d/functions
+
+# things from ups.conf get there by ups reading it
+
+
+# NOTE: if you change any OPTIONS here, you get what you pay for:
+# this script assumes all options are in the config file.
+CONFIGFILE="/etc/ups.conf"
+OPTIONS=" -f $CONFIGFILE"
+SYSCONFIG="/etc/sysconfig/ups"
+
+# FIXME: 1.9.x has a --shutdown flag that parses the config file and
+# shuts down the correct running pid, but that's unavailable in 1.8
+# for now.  This can go away when this script stops supporting 1.8.
+DBPATH=`awk -F'[:=]' -v IGNORECASE=1 '/^[[:blank:]]*dbpath[[:blank:]]*[:=][[:blank:]]*/{print $2}' "$CONFIGFILE" | tr -d '[:blank:]'`
+PIDFILE=`awk -F'[:=]' -v IGNORECASE=1 '/^[[:blank:]]*pidfilepath[[:blank:]]*[:=][[:blank:]]*/{print $2}' "$CONFIGFILE" | tr -d '[:blank:]'`
+PIDDIR=`dirname $PIDFILE`
+
+ups=${ups-/usr/bin/ups}
+
+UPS_USER=ups
+UPS_GROUP=ups
+
+if [ -f "$SYSCONFIG" ]; then
+    . "$SYSCONFIG"
+fi
+
+# Handle NUMA access to CPUs (SERVER-3574)
+# This verifies the existence of numactl as well as testing that the command works
+NUMACTL_ARGS="--interleave=all"
+if which numactl >/dev/null 2>/dev/null && numactl $NUMACTL_ARGS ls / >/dev/null 2>/dev/null
+then
+    NUMACTL="numactl $NUMACTL_ARGS"
+else
+    NUMACTL=""
+fi
+
+start()
+{
+  # Make sure the default pidfile directory exists
+  if [ ! -d $PIDDIR ]; then
+    install -d -m 0755 -o $UPS_USER -g $UPS_GROUP $PIDDIR
+  fi
+
+  echo -n $"Starting UPS: "
+  daemon --user "$UPS_USER" --check $ups "$NUMACTL $ups $OPTIONS >/dev/null 2>&1"
+  RETVAL=$?
+  echo
+  [ $RETVAL -eq 0 ] && touch /var/lock/subsys/ups
+}
+
+stop()
+{
+  echo -n $"Stopping ups: "
+  killproc -p "$PIDFILE" -d 300 /usr/bin/ups
+  RETVAL=$?
+  echo
+  [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/ups
+}
+
+restart () {
+    stop
+    start
+}
+
+
+RETVAL=0
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart|reload|force-reload)
+    restart
+    ;;
+  condrestart)
+    [ -f /var/lock/subsys/ups ] && restart || :
+    ;;
+  status)
+    status $ups
+    RETVAL=$?
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
+    RETVAL=1
+esac
+
+exit $RETVAL
