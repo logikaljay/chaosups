@@ -80,10 +80,12 @@ function validate(){
         err.push({ element: $daysWrapper, message: "You must select one or more days" });
     }
 
+    /* Disabling this, because some times leaders have zone EQ laying around they wanna put on UPS
     // check that there are users
     if (usersVal.length == 0) {
         err.push({ element: $users, message: "You must provide at least one player" });
     }
+    */
 
     // check if there are any errors
     if (err.length == 0) {

@@ -88,8 +88,8 @@ module.exports = function(app) {
 
     app.post('/run/confirm', app.libs.restrict, function(req, res) {
         run = req.session.run;
-        run.users = req.body.user;
-        run.items = req.body.item;
+        run.users = req.body.user || [];
+        run.items = req.body.item || [];
         run.leader = req.session.user.name;
 
         run.runDays = req.days;

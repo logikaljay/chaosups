@@ -1,3 +1,3 @@
-#!/usr/local/bin/node
+#!/usr/local/bin/supervisor
 
 var ups = require('../app.js');
