@@ -28,6 +28,15 @@ module.exports = function(app) {
                 }
 
                 var points = [];
+		// create a property foreach zone on the points array
+		app.factory.zones.map(function(zone) {
+                    points[zone.name] = {};
+		    points[zone.name].total = 0;
+		    points[zone.name].available = 0;
+		    points[zone.name].unapproved = 0;
+		    points[zone.name].used = 0;
+		});
+
                 var tmpPoints = [];
                 async.forEach(runs, function(run, callback) {
                     tmpPoints = tmpPoints.concat(run.points);
