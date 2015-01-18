@@ -28,14 +28,14 @@ module.exports = function(app) {
                 }
 
                 var points = [];
-		// create a property foreach zone on the points array
-		app.factory.zones.map(function(zone) {
+        		// create a property foreach zone on the points array
+        		app.factory.zones.map(function(zone) {
                     points[zone.name] = {};
-		    points[zone.name].total = 0;
-		    points[zone.name].available = 0;
-		    points[zone.name].unapproved = 0;
-		    points[zone.name].used = 0;
-		});
+        		    points[zone.name].total = 0;
+        		    points[zone.name].available = 0;
+        		    points[zone.name].unapproved = 0;
+        		    points[zone.name].used = 0;
+        		});
 
                 var tmpPoints = [];
                 async.forEach(runs, function(run, callback) {
@@ -43,7 +43,8 @@ module.exports = function(app) {
                     callback();
                 }, function(err) {
                     async.forEach(tmpPoints, function(point, callback) {
-                        if (point.user !== null && point.user._id == userId) {
+                        console.log(point.user._id + " - " + userId);
+                        if (point.user !== null && point.user._id.equals(userId)) {
                             if (points[point.zone] === undefined) {
                                 points[point.zone] = {};
                             }
