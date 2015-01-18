@@ -14,7 +14,6 @@ module.exports = function(app) {
            .populate("leader")
            .populate("points")
            .sort({ date: -1 })
-           .limit(6)
            .exec(function(err, docs) {
             if (err) {
                 console.log("app.factory.runs.getById ERROR: " + err);
@@ -43,7 +42,6 @@ module.exports = function(app) {
            .populate("leader")
            .populate("points")
            .sort({ date: -1 })
-           .limit(6)
            .exec(function(err, docs) {
             if (err) {
                 console.log("app.factory.runs.getById ERROR: " + err);
