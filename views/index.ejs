@@ -35,7 +35,7 @@
             </td>
         </tr>
         <% }); %>
-        
+
         </tbody>
     </table>
     </section>
@@ -57,7 +57,7 @@
         </thead>
         <tbody>
         <% for (var zone in points) { %>
-            <% if (points[zone]['total'] !== 0 && points[zone]['used'] !== 0) { %> 
+            <% if (points[zone]['total'] > 0 && points[zone]['unapproved'] > 0) { %>
             <tr>
                 <td width="100"><%= zone %></td>
                 <td width="100"><%= points[zone]['total'] %></td>
