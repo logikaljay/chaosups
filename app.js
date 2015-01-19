@@ -62,8 +62,11 @@ var sessionStore = new SessionStore({
     connection: mongoose.connection // <== custom connection
 });
 
-// Configuration
+// Set local variables views
 app.locals.moment = moment;
+app.locals.title = "ChaosUPS";
+
+// Configuration
 app.engine('ejs', engine);
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
