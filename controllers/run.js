@@ -177,6 +177,7 @@ module.exports = function(app) {
     _addUsersAndPoints = function(run, users, fn) {
         // iterate over each user and if they don't exist - create them
         async.forEach(users, function(user, callback) {
+            user = user.trim();
             app.factory.users.exists(user.name, function(exists) {
                 if (exists) {
                     // get the user
