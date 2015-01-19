@@ -43,7 +43,6 @@ module.exports = function(app) {
                     callback();
                 }, function(err) {
                     async.forEach(tmpPoints, function(point, callback) {
-                        console.log(point.user._id + " - " + userId);
                         if (point.user !== null && point.user._id.equals(userId)) {
                             if (points[point.zone] === undefined) {
                                 points[point.zone] = {};
