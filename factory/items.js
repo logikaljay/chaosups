@@ -2,10 +2,12 @@ var mongoose = require('mongoose');
 
 module.exports = function(app) {
     app.factory.items = {};
-    
+
     app.factory.items.getById = function(itemId, fn) {
         var Item = mongoose.model('Item', app.models.item);
         var Bid = mongoose.model('Bid', app.models.bid);
+        var User = mongoose.model('User', app.models.user);
+
         Item.findById(itemId)
             .sort({ date: -1 })
             .populate('currentBid')
@@ -36,6 +38,8 @@ module.exports = function(app) {
     app.factory.items.getByState = function(state, fn) {
         var Item = mongoose.model('Item', app.models.item);
         var Bid = mongoose.model('Bid', app.models.bid);
+        var User = mongoose.model('User', app.models.user);
+
         Item.find({ state: state })
             .populate('currentBid')
             .sort({ date: -1 })
@@ -63,7 +67,7 @@ module.exports = function(app) {
         var Item = mongoose.model('Item', app.models.item);
         var Bid = mongoose.model('Bid', app.models.bid);
         var User = mongoose.model('User', app.models.user);
-        
+
         Item.find({ state: 2 })
             .populate('currentBid')
             .sort({ date: -1 })
@@ -94,7 +98,7 @@ module.exports = function(app) {
         var Item = mongoose.model('Item', app.models.item);
         var Bid = mongoose.model('Bid', app.models.bid);
         var User = mongoose.model('User', app.models.user);
-        
+
         Item.find({ state: 0 })
             .limit(6)
             .populate('currentBid')
