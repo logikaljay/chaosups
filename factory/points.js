@@ -86,6 +86,8 @@ module.exports = function(app) {
                             // Point state 2 == spent
                             if (point.state == 2) {
                                 points[point.zone].spent += Number(point.amount);
+                                points[point.zone].available = points[point.zone].available - point.amount;
+                                points[point.zone].total = points[point.zone].total - point.amount;
                             }
 
                             callback();
@@ -96,10 +98,11 @@ module.exports = function(app) {
                         // now we have our points array - get points that have been used by current bids
                         app.factory.bids.getAllByUserId(userId, function(bids) {
                             async.forEach(bids, function(bid, callback) {
-                                points[bid.zone].used = bid.amount;
+                                points[bid.zone].used += bid.amount;
                                 points[bid.zone].available = points[bid.zone].available - bid.amount;
                                 callback();
                             }, function(err) {
+                                /*
                                 // now get all the points spent on finished bids
                                 app.factory.bids.getAllFinishedByUserId(userId, function(finishedBids) {
                                     async.forEach(finishedBids, function(bid, callback) {
@@ -111,6 +114,9 @@ module.exports = function(app) {
                                         fn(points);
                                     });
                                 });
+                                */
+                               
+                                fn(points);
                             });
                         });
 
