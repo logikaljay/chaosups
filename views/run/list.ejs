@@ -23,7 +23,7 @@
                 <td><%= run.items.length %></td>
                 <td><%= run.points.map(function(point) { return point.user !== null ? " " + point.user.name : " N/a" }) %></td>
                 <td><%= run.state == 0 ? "approved" : "unapproved" %></td>
-                <td>
+                <td width="190">
                 <ul style='margin:0;padding:0;list-style:none;'>
                     <li style="float:left;"><a class="btn btn-info" href="/run/detail/<%=run._id%>">View</a>&nbsp;</li>
                     <% if (user.isAdmin) { %>
@@ -72,7 +72,7 @@
                 <td><%= run.items.length %></td>
                 <td><%= run.points.map(function(point) { return point.user !== null ? " " + point.user.name : " N/a" }) %></td>
                 <td><%= run.state == 0 ? "approved" : "unapproved" %></td>
-                <td>
+                <td width="190">
                 <ul style='margin:0;padding:0;list-style:none;'>
                     <li style="float:left;"><a class="btn btn-info" href="/run/detail/<%=run._id%>">View</a>&nbsp;</li>
                     <% if (user.isAdmin) { %>
