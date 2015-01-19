@@ -21,7 +21,7 @@
                 <td><%= moment(run.date).format("MMM Do, HH:mm") %></td>
                 <td><%= run.leader !== null ? run.leader.name : "N/a" %></td>
                 <td><%= run.items.length %></td>
-                <td><%= run.points.map(function(point) { return point.user !== null ? point.user.name : "N/a" }) %></td>
+                <td><%= run.points.map(function(point) { return point.user !== null ? " " + point.user.name : " N/a" }) %></td>
                 <td><%= run.state == 0 ? "approved" : "unapproved" %></td>
                 <td>
                 <ul style='margin:0;padding:0;list-style:none;'>
@@ -70,7 +70,7 @@
                 <td><%= moment(run.date).format("MMM Do, HH:mm") %></td>
                 <td><%= run.leader !== null ? run.leader.name : "N/a" %></td>
                 <td><%= run.items.length %></td>
-                <td><%= run.points.map(function(point) { return point.user !== null ? point.user.name : "N/a" }) %></td>
+                <td><%= run.points.map(function(point) { return point.user !== null ? " " + point.user.name : " N/a" }) %></td>
                 <td><%= run.state == 0 ? "approved" : "unapproved" %></td>
                 <td>
                 <ul style='margin:0;padding:0;list-style:none;'>
