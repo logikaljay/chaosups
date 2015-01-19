@@ -39,6 +39,7 @@ i = 0;
         <tr>
             <th>Item</th>
             <th>Value</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -49,6 +50,11 @@ i = 0;
                 </td>
                 <td>
                     <%= item.minimumBid %>
+                </td>
+                <td>
+                    <% if (run.state == 0) { %>
+                        <a href="/items/list/<%= item._id %>" class="btn btn-info">View</a>
+                    <% } %>
                 </td>
             </tr>
         <%
