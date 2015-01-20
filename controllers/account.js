@@ -51,7 +51,15 @@ module.exports = function(app) {
             err = req.session.err;
         };
 
-        res.render('account/edit', { err: err, msg: msg });
+        var alts = [];
+        var user = req.session.user;
+        if (user.alts) {
+            alts = user.alts;
+        }
+
+        console.log(alts);
+
+        res.render('account/edit', { err: err, msg: msg, alts: alts });
     });
 
     app.post('/account/edit', app.libs.restrict, function(req, res) {
@@ -59,7 +67,26 @@ module.exports = function(app) {
         var newPassword = req.body.newPassword;
         var confirmPassword = req.body.confirmPassword;
         var user = req.session.user.name;
+        var alts = req.body.alts;
 
+        if (oldPassword.length > 0) {
+            resetPassword(res, user, oldPassword);
+        } else if (alts.length > 0) {
+            app.factory.users.addAltsToUserId(req.session.user.id, alts, function(user) {
+                app.libs.addSessionUser(req, user, function() {
+                    res.redirect("/account/edit");
+                });
+            });
+        }
+    });
+
+    app.get('/account/logout', app.libs.restrict, function(req, res) {
+        req.session.destroy(function() {
+            res.redirect('/');
+        });
+    });
+
+    function resetPassword(res, user, oldPassword) {
         // check oldPassword
         app.libs.authenticate(user, oldPassword, function(err, user) {
             if (!user) {
@@ -88,7 +115,7 @@ module.exports = function(app) {
                                 res.render('account/edit', { err: "Something went wrong while trying to update your password.", msg: "" });
                             } else {
                                 app.libs.addSessionUser(req, user, function() {
-                                    res.render('account/edit', { err: "", msg: "Your password was changed successfully" });
+                                    res.redirect("/");
                                 });
                             }
                         });
@@ -96,12 +123,6 @@ module.exports = function(app) {
                 }
             }
         });
-    });
-
-    app.get('/account/logout', app.libs.restrict, function(req, res) {
-        req.session.destroy(function() {
-            res.redirect('/');
-        });
-    });
+    }
 
 };

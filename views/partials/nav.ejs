@@ -53,14 +53,13 @@
         <li class="<%= url.indexOf("/account") > -1 ? "active" : "" %> dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">My account <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li><a href="/account/logout">Log out</a></li>
+            <li><a href="/account/edit">Settings</a></li>
             <li class="divider"></li>
-            <!--<li><a href="#">Settings</a></li>-->
-            <li><a href="/account/edit">Security</a></li>
+            <li><a href="/account/logout">Log out</a></li>
           </ul>
         </li>
       </ul>
-    </div><!-- /.navbar-collapse -->
+    </div>
     <% } %>
-  </div><!-- /.container-fluid -->
+  </div>
 </nav>

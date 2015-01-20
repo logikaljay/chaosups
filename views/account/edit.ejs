@@ -1,6 +1,5 @@
 <% layout('../layout') -%>
 
-<h3>Change password</h3>
 
 <% if (err) { %>
     <% include ../partials/err -%>
@@ -11,6 +10,46 @@
 <% } %>
 
 <form action="/account/edit" method="post">
+
+    <h3>Alternate Characters</h3>
+    <div class="form-group">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Alternate Character</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody class="alts">
+                <% alts.forEach(function(alt) { %>
+                <tr>
+                    <td>
+                        <input type="hidden" value="<%= alt %>" name="alts" />
+                        <%= alt %>
+                    </td>
+                    <td><a href="javascript:;" onclick="removeAlt($(this))" class='btn btn-info'>Remove</a></td>
+                </tr>
+                <% }); %>
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <td><input type='text' value="" placeholder="alt" class="form-control js-alt-name" />
+                    <td><a href="javascript:;" class='js-alt-add btn btn-info'>Add</a></td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><input type='submit' class='btn btn-info' value="Save" />
+                </tr>
+            </tfoot>
+
+            </table>
+        </table>
+    </div>
+
+
+    <h3>Change password</h3>
     <div class="form-group">
         <label for="oldPassword">Old password</label>
         <input type='password' name="oldPassword" id="oldPassword" class="form-control" />
@@ -27,10 +66,41 @@
     </div>
 
     <button class='btn btn-info' onclick="validateChangePassword(); return false;">Change password</button>
+
+    
 </form>
 
 
 <script type="text/javascript">
+
+    function removeAlt($this) {
+        $this.parent().parent().remove();
+    }
+
+    $(function() {
+        $alts = $(".alts");
+
+        $(".js-alt-add").on('click', function() {
+            // validate $(".js-alt-name") is NN
+            if ($(".js-alt-name").val().length > 0) {
+                // add the alt to the list
+                $alts.append("<tr>" +
+                    "<td>" +
+                        "<input type='hidden' value='"+$(".js-alt-name").val()+"' name=\"alts\" />" +
+                        $(".js-alt-name").val() +
+                    "</td>" +
+                    "<td>" +
+                        "<a href='javascript:;' onclick='removeAlt($(this))' class='btn btn-info'>Remove</a>" +
+                    "</td>" +
+                "</tr>");
+
+                // reset the placeholder
+                $(".js-alt-name").val("");
+            }
+        });
+
+    });
+
     function validateChangePassword() {
         var $oldPassword = $("#oldPassword")
           , $newPassword = $("#newPassword")

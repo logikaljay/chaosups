@@ -57,3 +57,76 @@
 </script>
 
 <% } %>
+
+<script type="text/javascript">
+
+    $(".js-place-bid").on('click', function(e) {
+        var $this = $(this)
+          , loadingBtn = $this.button('loading')
+          , itemId = $(".js-item-id").val()
+          , bidValue = $(".js-item-bid").val()
+          , bidMaximum = $(".js-bid-max").val()
+          , bidMinimum = $(".js-bid-min").val()
+          , error = false;
+        
+        if (Number(bidValue) < Number(bidMinimum)) {
+            showError($this, "You cannot bid below the minimum bid");
+            error = true;
+        }
+
+
+        if (Number(bidValue) > Number(bidMaximum)) {
+            showError($this, "You don't have enough points for that");
+            error = true;
+        }
+
+        if (!error) {
+            $.post('/bid/' + itemId, { bid: bidValue }, function(data) {
+                if (data.status == "ok") {
+                    var currentBid = data.data.currentBid;
+                    var previousBids = data.data.previousBids;
+
+                    // rebuild bids list
+                    var currentBidHtml = "<li><b>" + currentBid.user.name + " - " + currentBid.amount + "</b></li>";
+                    var previousBidsHtml = "";
+                    previousBids.reverse().forEach(function(previous) {
+                        previousBidsHtml += "<li>" + previous.user.name + " - " + previous.amount + "</li>";
+                    });
+
+                    $(".bids").html(currentBidHtml + previousBidsHtml);
+                    $(".js-item-bid").val("");
+                    $this.button('complete');
+                    setTimeout(function() {
+                        $this.button('reset');
+                    }, 2000);
+
+                    // update parent item
+                    updateItem(currentBid, itemId, data.data.minimumBid, data.data.maximumBid, data.data.endDate, data.data.endDate_from);
+                } else {
+                    // show error
+                    showError($this, data.message)
+                }
+            });
+        }
+    });
+
+    function updateItem(currentBid, itemId, minimumBid, maximumBid, endDate, endDate_from) {
+        $row = $(".item-" + itemId);
+        $currentBid = $row.find(".js-bid-currentbid");
+        $minimumBid = $row.find(".js-bid-minimumbid");
+        $maximumBid = $row.find(".js-bid-maximumbid");
+        $ending = $row.find(".ending");
+        $currentBid.text(currentBid.amount);
+        $minimumBid.text(minimumBid);
+        $maximumBid.text(maximumBid);
+        $ending.text(endDate + "<br />" + endDate_from);
+    }
+
+    function showError($btn, error) {
+        $btn.button('failed');
+        setTimeout(function() {
+            $btn.button('reset');
+        }, 2000);
+    }
+</script>
+</script>

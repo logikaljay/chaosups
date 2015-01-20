@@ -20,6 +20,7 @@ module.exports = function(app) {
 
         // get the item
         app.factory.items.getById(itemId, function(item) {
+            console.log('bidding on ' + item.name);
             // check if value >= minimumBid
             if (value >= item.minimumBid) {
                 

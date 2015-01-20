@@ -8,7 +8,8 @@ module.exports = function(app) {
         salt: String,
         hash: String,
         state: Number,
-        points: [{ type: Schema.Types.ObjectId, ref: 'Point' }]
+        points: [{ type: Schema.Types.ObjectId, ref: 'Point' }],
+        alts: [ String ]
     }, { strict: false });
 
     app.models.user = userSchema;

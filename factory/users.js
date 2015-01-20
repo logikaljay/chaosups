@@ -56,6 +56,24 @@ module.exports = function(app) {
         return false;
     };
 
+    app.factory.users.addAltsToUserId = function(userId, alts, fn) {
+        var User = mongoose.model('User', app.models.user);
+        User.findById(userId, function(err, user) {
+            if (err) {
+                console.log("app.factory.users.addAltsToUserId ERROR: " + err);
+            }
+
+            user.alts = alts;
+            user.save(function(err) {
+                if (err) {
+                    console.log("app.factory.users.addAltsToUserId save ERROR:" + err)
+                }
+
+                fn(user);
+            })
+        });
+    };
+
     app.factory.users.add = function(name, fn) {
         if (name === undefined) {
             return false;
