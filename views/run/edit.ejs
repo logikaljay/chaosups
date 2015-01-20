@@ -64,8 +64,9 @@
     </label>
     </div>
     <div class="form-group">
-        <a href="/run/delete/<%=run._id%>" onclick='return confirm("Are you sure you want to delete this run?");' class='btn btn-danger'>Delete run</a>
-        <button class="btn btn-info pull-right">Save changes</button>
+        <a href="javascript:window.history.back();" class='btn btn-warning'>Cancel</a>
+        <button class="btn btn-info">Save changes</button>
+        <a href="/run/delete/<%=run._id%>" onclick='return confirm("Are you sure you want to delete this run?");' class='btn btn-danger pull-right'>Delete run</a>
     </div>
     <p>&nbsp;</p>
 </form>
