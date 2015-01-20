@@ -53,7 +53,8 @@ module.exports = function(app) {
 
         var alts = [];
         var user = req.session.user;
-        if (user.alts) {
+        console.log(user.alts);
+        if (user.alts !== undefined) {
             alts = user.alts;
         }
 
@@ -70,14 +71,21 @@ module.exports = function(app) {
         var alts = req.body.alts;
 
         if (oldPassword.length > 0) {
-            resetPassword(res, user, oldPassword);
-        } else if (alts.length > 0) {
+            resetPassword(req, res, user, oldPassword, newPassword, confirmPassword);
+        } else if (alts !== undefined && alts.length > 0) {
             app.factory.users.addAltsToUserId(req.session.user.id, alts, function(user) {
                 app.libs.addSessionUser(req, user, function() {
                     res.redirect("/account/edit");
                 });
             });
-        }
+        } else if (alts == undefined && oldPassword.length == 0) {
+            // remove all alts from user
+            app.factory.users.addAltsToUserId(req.session.user.id, [], function(user) {
+                app.libs.addSessionUser(req, user, function() {
+                    res.render('account/edit', { err: "", msg: "", alts: [] });
+                });
+            });
+        } 
     });
 
     app.get('/account/logout', app.libs.restrict, function(req, res) {
@@ -86,7 +94,7 @@ module.exports = function(app) {
         });
     });
 
-    function resetPassword(res, user, oldPassword) {
+    function resetPassword(req, res, user, oldPassword, newPassword, confirmPassword) {
         // check oldPassword
         app.libs.authenticate(user, oldPassword, function(err, user) {
             if (!user) {
