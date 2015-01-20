@@ -30,6 +30,32 @@ module.exports = function(app) {
         });
     };
 
+    app.factory.users.getByNameOrAltName = function(name, fn) {
+        name = name.toLowerCase();
+        
+        var User = mongoose.model('User', app.models.user);
+        User.findOne({ name: name }, function(err, doc) {
+            if (err) fn(undefined);
+
+            console.log(doc);
+            
+            if (doc) {
+                // this was a user, return it
+                fn(doc);
+            } else {
+                // try get by alt name
+                User.findOne({ alts: { "$in" : [name] } }, function(err, doc) {
+                    if (err) {
+                        fn(undefined);
+                    }
+
+                    // return the alt
+                    fn(doc);
+                });
+            }
+        });
+    }
+
     app.factory.users.exists = function(name, fn) {
         name = name.toLowerCase();
 

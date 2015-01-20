@@ -178,26 +178,18 @@ module.exports = function(app) {
         // iterate over each user and if they don't exist - create them
         async.forEach(users, function(user, callback) {
             user.name = user.name.trim();
-            app.factory.users.exists(user.name, function(exists) {
-                if (exists) {
-                    // get the user
-                    app.factory.users.getByName(user.name, function(userEntity) {
+            app.factory.users.getByNameOrAltName(user.name, function(userEntity) {
+                if (userEntity !== null) {
+                    // add the user to the run
+                    run.runUsers.push(userEntity);
 
-                        // add the user to the run
-                        if (userEntity !== null) {
-                            run.runUsers.push(userEntity);
-
-                            // add points to the user
-                            app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
-                                if (pointEntity !== null) {
-                                    run.runPoints.push(pointEntity);
-                                }
-
-                                callback();
-                            });
-                        } else {
-                            callback();
+                    // add points to the user
+                    app.factory.points.add(userEntity, run.zone, user.points, function(pointEntity) {
+                        if (pointEntity !== null) {
+                            run.runPoints.push(pointEntity);
                         }
+
+                        callback();
                     });
                 } else {
                     app.factory.users.add(user.name, function(userEntity) {
