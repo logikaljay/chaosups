@@ -58,8 +58,6 @@ module.exports = function(app) {
             alts = user.alts;
         }
 
-        console.log(alts);
-
         res.render('account/edit', { err: err, msg: msg, alts: alts });
     });
 

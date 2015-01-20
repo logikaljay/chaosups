@@ -101,21 +101,7 @@ module.exports = function(app) {
                                 points[bid.zone].used += bid.amount;
                                 points[bid.zone].available = points[bid.zone].available - bid.amount;
                                 callback();
-                            }, function(err) {
-                                /*
-                                // now get all the points spent on finished bids
-                                app.factory.bids.getAllFinishedByUserId(userId, function(finishedBids) {
-                                    async.forEach(finishedBids, function(bid, callback) {
-                                        points[bid.zone].spent += bid.amount;
-                                        points[bid.zone].available = points[bid.zone].available - bid.amount;
-                                        points[bid.zone].total = points[bid.zone].total - bid.amount;
-                                        callback();
-                                    }, function(err) {
-                                        fn(points);
-                                    });
-                                });
-                                */
-                               
+                            }, function(err) {                               
                                 fn(points);
                             });
                         });
