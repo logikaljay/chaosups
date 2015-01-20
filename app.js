@@ -11,6 +11,7 @@ var fs = require('fs')
   , bodyParser = require('body-parser')
   , engine = require('ejs-locals')
   , moment = require('moment')
+  , async = require('async')
   , hash = require('./lib/hash').hash;
 
 mongoose.connect('mongodb://localhost/chaosups');
@@ -55,6 +56,21 @@ fs.readdir(factoryDir, function(err, files) {
     });
 });
 
+// Load plugins
+app.plugins = [];
+var pluginsDir = path.join(__dirname, 'plugins');
+var files = fs.readdirSync(pluginsDir);
+files.forEach(function(plugin) {
+    var plugin = require(path.join(pluginsDir, plugin));
+    if (plugin.hasOwnProperty("name") && plugin.hasOwnProperty("load") && plugin.hasOwnProperty("version")) {
+        plugin.load(app);
+        app.plugins.push(plugin);
+        console.log("[PLUGIN] Loaded: %s v%s", plugin.name, plugin.version);
+    } else {
+        console.log("Failed to load plugin: " + plugin);
+    }
+});
+
 // Session store configuration
 var sessionStore = new SessionStore({
     interval: 120000, // expiration check worker run interval in millisec (default: 60000)
@@ -65,6 +81,8 @@ var sessionStore = new SessionStore({
 // Set local variables views
 app.locals.moment = moment;
 app.locals.title = "ChaosUPS";
+app.locals.plugins = app.plugins;
+console.log(app.plugins);
 
 // Configuration
 app.engine('ejs', engine);
@@ -83,8 +101,8 @@ app.use(express.session({
   store: sessionStore,
   cookie: { maxAge: 15 * 60 * 1000 }
 }));
-app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(app.router);
 
 app.listen(3000, function(){
   console.log("Express server listening");
