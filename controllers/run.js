@@ -6,6 +6,15 @@ module.exports = function(app) {
         res.redirect('/run/list');
     });
 
+    app.get('/run/edit/:id', app.libs.restrictAdmin, function(req, res) {
+        var runId = req.params.id;
+
+        app.factory.getRunById(runId, function(run) {
+            console.log(run);
+            res.render('run/edit', { run: run });
+        });
+    });
+
     app.get('/run/list', app.libs.restrict, function(req, res) {
         app.factory.runs.getAll(function(runs) {
             var approved = runs.filter(function(run) {
