@@ -62,3 +62,11 @@ i = 0;
         }); %>
     </tbody>
 </table>
+
+<% if (user.isAdmin || run.leader._id.equals(user.id)) { %>
+    <% if (user.isAdmin) { %> 
+    <a href="/run/delete/<%=run._id%>" onclick='return confirm("Are you sure you want to delete this run?");' class='btn btn-danger'>Delete run</a>
+    <% } %>
+
+    <a href="/run/edit/<%=run._id%>" class='btn btn-info pull-right'>Edit run</a>
+<% } %>

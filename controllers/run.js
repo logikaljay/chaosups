@@ -6,12 +6,76 @@ module.exports = function(app) {
         res.redirect('/run/list');
     });
 
-    app.get('/run/edit/:id', app.libs.restrictAdmin, function(req, res) {
+    app.get('/run/edit/:id', app.libs.restrict, function(req, res) {
         var runId = req.params.id;
+        var user = req.session.user;
 
-        app.factory.getRunById(runId, function(run) {
+        app.factory.runs.getById(runId, function(run) {
             console.log(run);
-            res.render('run/edit', { run: run });
+
+            // check if the logged in user is an admin or the run leader
+            if (user.isAdmin || (run.leader._id.equals(user.id) && run.state == 1)) {
+                res.render('run/edit', { run: run });
+            } else {
+                res.redirect('/');
+            }
+        });
+    });
+
+    app.post('/run/edit/:id', app.libs.restrict, function(req, res) {
+        var runId = req.params.id;
+        var user = req.session.user;
+        var players = req.body.players;
+        var items = req.body.items;
+        var approveRun = req.body.approveRun;
+        var tmpRun = {};
+
+        tmpRun.runUsers = [];
+        tmpRun.runPoints = [];
+        tmpRun.runItems = [];
+
+        console.log(players);
+        console.log(items);
+
+        app.factory.runs.getById(runId, function(runEntity) {
+            tmpRun.zone = runEntity.zone;
+
+            // check if the logged in user is an admin or the run leader
+            if (user.isAdmin || (runEntity.leader._id.equals(user.id) && run.state == 1)) {
+                
+                // remove all points and items from the run
+                async.forEach(runEntity.points, function(point, callback) {
+                    point.remove(function(err) {
+                        callback();
+                    });
+
+                }, function(err) {
+                    async.forEach(runEntity.items, function(item, callback) {
+                        item.remove(function(err) {
+                            callback();
+                        });
+
+                    }, function(err) {
+                        _addUsersAndPoints(tmpRun, players, function(tmpRun) {
+                            _addItems(tmpRun, items, function(tmpRun) {
+                                if (approveRun) {
+                                    tmpRun.state = 0;
+                                }
+
+                                runEntity.items = tmpRun.runItems;
+                                runEntity.points = tmpRun.runPoints;
+
+                                runEntity.save(function(err) {
+                                    res.redirect('/');
+                                });
+                            });
+                        });
+                    });
+                });
+
+            } else {
+                res.redirect('/');
+            }
         });
     });
 
@@ -131,11 +195,18 @@ module.exports = function(app) {
         });
     });
 
-    app.get('/run/delete/:id', app.libs.restrictAdmin, function(req, res) {
+    app.get('/run/delete/:id', app.libs.restrict, function(req, res) {
         var runId = req.params.id;
+        var user = req.session.user;
 
-        app.factory.runs.delete(runId, function() {
-            res.redirect('back');
+        app.factory.runs.getById(runId, function(run) {
+            if (user.isAdmin || (run.leader._id.equals(user.id) && run.state == 1)) {
+                app.factory.runs.delete(runId, function() {
+                    res.redirect('/');
+                });
+            } else {
+                res.redirect('back');
+            }
         });
     });
 

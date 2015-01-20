@@ -1,0 +1,145 @@
+<% layout('../layout') -%>
+
+<form action='/run/edit/<%=run._id%>' method='post'>
+
+<h3>Edit Players</h3>
+<table class="table table-hover">
+</thead>
+    <tr>
+        <th>Player</th>
+        <th>Points</th>
+        <th>Action</th>
+    </tr>
+</thead>
+<tbody class="players">
+    <% var i = 0; run.points.forEach(function(point) { %>
+    <tr>
+        <td><input type='text' name='players[<%=i%>][name]' class='js-player-name form-control' value='<%= point.user.name %>' /></td>
+        <td width="90"><input type='text' name='players[<%=i%>][points]' class='js-player-points form-control' value='<%= point.amount %>' /></td>
+        <td width="90"><a class='btn btn-info' onclick="removePlayer($(this));">Remove</a></td>
+    </tr>
+    <% i++; }); %>
+</tbody>
+<tfoot>
+    <tr>
+        <td><input type='text' class='form-control js-addplayer-name' value='' placeholder="Player" /></td>
+        <td><input type='text' class='form-control js-addplayer-points' value='' placeholder="Points" /></td>
+        <td><a class='btn btn-info' onclick="addPlayer($(this));">Add</a></td>
+    </tr>
+</tfoot>
+</table>
+
+
+<h3>Edit Items</h3>
+<table class="table table-hover">
+</thead>
+    <tr>
+        <th>Player</th>
+        <th>Points</th>
+        <th>Action</th>
+    </tr>
+</thead>
+<tbody class="items">
+    <% i = 0; run.items.forEach(function(item) { %>
+    <tr>
+        <td><input type='text' name='items[<%=i%>][name]' class='js-item-name form-control' value='<%= item.name %>' /></td>
+        <td width="90"><input type='text' name='items[<%=i%>][value]' class='js-item-minimumBid form-control' value='<%= item.minimumBid %>' /></td>
+        <td width="90"><a class='btn btn-info' onclick="removeItem($(this));">Remove</a></td>
+    </tr>
+    <% i++; }); %>
+</tbody>
+<tfoot>
+    <tr>
+        <td><input type='text' class='form-control js-additem-name' value='' placeholder="Item" /></td>
+        <td><input type='text' class='form-control js-additem-value' value='' placeholder="Value" /></td>
+        <td><a class='btn btn-info' onclick="addItem($(this));">Add</a></td>
+    </tr>
+</tfoot>
+</table>
+
+    <div class="form-group">
+    <label>
+        <input type='checkbox' name="approveRun" />
+        Approve this run after saving
+    </label>
+    </div>
+    <div class="form-group">
+        <a href="/run/delete/<%=run._id%>" onclick='return confirm("Are you sure you want to delete this run?");' class='btn btn-danger'>Delete run</a>
+        <button class="btn btn-info pull-right">Save changes</button>
+    </div>
+    <p>&nbsp;</p>
+</form>
+
+<script type="text/javascript">
+function addPlayer($player) {
+    $players = $(".players");
+    var name = $(".js-addplayer-name").val();
+    var points = $(".js-addplayer-points").val();
+
+    // add the row
+    $players.append("<tr>" +
+            "<td><input type='text' name='players[0][name]' class='js-player-name form-control' value='"+name+"' /></td>" +
+            "<td width='90'><input type='text' name='players[0][points]' class='js-player-points form-control' value='"+points+"' /></td>" +
+            "<td><a class='btn btn-info' onclick='removePlayer($(this));'>Remove</a></td>" +
+        "</tr>");
+
+    // reset the input fields
+    $(".js-addplayer-name").val("");
+    $(".js-addplayer-value").val("");
+
+    // re-index the list of players
+    reIndexPlayers();
+}
+
+function addItem($item) {
+    $items = $(".items");
+    var name = $(".js-additem-name").val();
+    var points = $(".js-additem-value").val();
+
+    // add the row
+    $items.append("<tr>" +
+            "<td><input type='text' name='items[0][name]' class='js-item-name form-control' value='"+name+"' /></td>" +
+            "<td width='90'><input type='text' name='items[0][value]' class='js-item-minimumBid form-control' value='"+points+"' /></td>" +
+            "<td><a class='btn btn-info' onclick='removeItem($(this));'>Remove</a></td>" +
+        "</tr>");
+
+    // reset the input fields
+    $(".js-additem-name").val("");
+    $(".js-additem-value").val("");
+
+    // re-index the list of items
+    reIndexItems();
+}
+
+function removePlayer($player) {
+    $player.parent().parent().remove();
+    reIndexPlayers();
+}
+
+function removeItem($item) {
+    $item.parent().parent().remove();
+    reIndexItems();
+}
+
+function reIndexPlayers() {
+    $players = $(".players").find("tr");
+    $players.each(function(index, $player) {
+        $name = $($player).find(".js-player-name");
+        $points = $($player).find(".js-player-points");
+
+        $name.attr('name', "players[" + index + "][name]");
+        $points.attr('name', "players[" + index +"][points]");
+    });
+}
+
+function reIndexItems() {
+    $items = $(".items").find("tr");
+    $items.each(function(index, $item) {
+        $name = $($item).find(".js-item-name");
+        $points = $($item).find(".js-item-minimumBid");
+
+        $name.attr('name', "items[" + index + "][name]");
+        $points.attr('name', "items[" + index + "][minimumBid]");
+    });
+}
+</script>

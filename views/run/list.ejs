@@ -26,17 +26,19 @@
                 <td width="190">
                 <ul style='margin:0;padding:0;list-style:none;'>
                     <li style="float:left;"><a class="btn btn-info" href="/run/detail/<%=run._id%>">View</a>&nbsp;</li>
-                    <% if (user.isAdmin) { %>
+                    <% if (user.isAdmin || (run.leader._id.equals(user.id) && run.state == 1)) { %>
                     <li style="float:left;" class="dropdown">
                         <a href="#" class="dropdown-toggle btn btn-info" data-toggle="dropdown" role="button" aria-expanded="false">Actions <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
+                            <% if (user.isAdmin) { %>
                             <li>
                                 <a href="<%= run.state == 1 ? "/run/approve/" + run._id : "/run/unapprove/" + run._id %>">
                                     <%= run.state == 1 ? "Approve" : "Unapprove" %>
                                 </a>
                             </li>
                             <li class="divider"></li>
-                            <li><a href="#">Edit (TBC)</a></li>
+                            <% } %>
+                            <li><a href="/run/edit/<%=run._id%>">Edit</a></li>
                             <li><a href="/run/delete/<%=run._id%>" class='danger'>Delete</a></li>
                         </ul>
                     </li>
@@ -85,7 +87,7 @@
                                 </a>
                             </li>
                             <li class="divider"></li>
-                            <li><a href="#">Edit (TBC)</a></li>
+                            <li><a href="/run/edit/<%=run._id%>">Edit</a></li>
                             <li><a href="#" class='danger'>Delete</a></li>
                         </ul>
                     </li>
