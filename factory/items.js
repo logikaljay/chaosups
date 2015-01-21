@@ -88,7 +88,11 @@ module.exports = function(app) {
                 };
 
                 Item.populate(item, options, function(err, results) {
-                    fn(results);
+                    var itemsForUser = results.filter(function(item) {
+                        return item.currentBid.user._id.equals(userId);
+                    })
+
+                    fn(itemsForUser);
                 });
             });
         });
