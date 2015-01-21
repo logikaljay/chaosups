@@ -26,14 +26,23 @@ module.exports = function(app) {
     app.post('/account/login', function(req, res) {
         var user = req.body.email.toLowerCase();
         var rememberMe = req.body.rememberMe;
+        var destinationUrl = req.session.destinationUrl;
+        delete req.session.destinationUrl;
 
         app.libs.authenticate(user, req.body.password, function(err, user) {
             if (user) {
                 app.libs.addSessionUser(req, user, function() {
-                    res.redirect('/');
+                    // check if we have a destination url
+                    if (destinationUrl) {
+                        res.redirect(destinationUrl);
+                    } else {
+                        res.redirect('/');
+                    }
                 });
             } else {
-                req.session.err = 'Authentication failed, please check your username and password.';
+                req.session.err = 'Authentication failed, ' +
+                    'please check your username and password.';
+
                 res.redirect('/account/login');
             }
         });
@@ -53,7 +62,7 @@ module.exports = function(app) {
 
         var alts = [];
         var user = req.session.user;
-        console.log(user.alts);
+
         if (user.alts !== undefined) {
             alts = user.alts;
         }
@@ -83,7 +92,7 @@ module.exports = function(app) {
                     res.render('account/edit', { err: "", msg: "", alts: [] });
                 });
             });
-        } 
+        }
     });
 
     app.get('/account/logout', app.libs.restrict, function(req, res) {

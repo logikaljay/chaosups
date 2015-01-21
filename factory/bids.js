@@ -17,7 +17,7 @@ module.exports = function(app) {
             if (err) {
                 console.log('app.factory.bids.getAll ERROR: ' + err);
             }
-            
+
             fn(docs);
         });
     }
@@ -78,7 +78,7 @@ module.exports = function(app) {
         var User = mongoose.model('User', app.models.user);
         var Bid = mongoose.model('Bid', app.models.bid);
         var moment = app.locals.moment;
-        
+
         // get the current user
         app.factory.users.getById(userId, function(user) {
 
