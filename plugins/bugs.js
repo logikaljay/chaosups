@@ -1,13 +1,8 @@
-var plugin = exports = module.exports = {};
-var app;
+module.exports = function(app) {
+    app.locals.plugins = app.locals.plugins || [];
 
-plugin.name = "Bugs";
-plugin.version = "1.0";
-plugin.nav = {
-    text: "Submit a bug",
-    url: "https://github.com/logikaljay/chaosups/issues"
-};
-
-plugin.load = function(app) {
-    this.app = app;
+    app.locals.plugins.push({
+        text: "Submit a bug",
+        url: "https://github.com/logikaljay/chaosups/issues"
+    });
 }

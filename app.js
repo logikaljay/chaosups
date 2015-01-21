@@ -20,11 +20,10 @@ var app = module.exports = express();
 // Load libraries
 app.libs = {};
 var libsDir = path.join(__dirname, 'lib');
-fs.readdir(libsDir, function(err, files) {
-    files.forEach(function(lib) {
-        console.log(lib);
-        require(path.join(libsDir, lib))(app);
-    });
+var libs = fs.readdirSync(libsDir);
+libs.forEach(function(lib) {
+    console.log(lib);
+    require(path.join(libsDir, lib))(app);
 });
 
 // Load models
@@ -59,16 +58,13 @@ fs.readdir(factoryDir, function(err, files) {
 // Load plugins
 app.plugins = [];
 var pluginsDir = path.join(__dirname, 'plugins');
-var files = fs.readdirSync(pluginsDir);
-files.forEach(function(plugin) {
-    var plugin = require(path.join(pluginsDir, plugin));
-    if (plugin.hasOwnProperty("name") && plugin.hasOwnProperty("load") && plugin.hasOwnProperty("version")) {
-        plugin.load(app);
-        app.plugins.push(plugin);
-        console.log("[PLUGIN] Loaded: %s v%s", plugin.name, plugin.version);
-    } else {
-        console.log("Failed to load plugin: " + plugin);
+fs.readdir(pluginsDir, function(err, plugins) {
+  plugins.forEach(function(plugin) {
+    if (plugin.indexOf('.js') > 0) {
+      require(path.join(pluginsDir, plugin))(app);
+      console.log("[PLUGIN] Loaded: %s", plugin);
     }
+  });
 });
 
 // Session store configuration
@@ -81,8 +77,6 @@ var sessionStore = new SessionStore({
 // Set local variables views
 app.locals.moment = moment;
 app.locals.title = "ChaosUPS";
-app.locals.plugins = app.plugins;
-console.log(app.plugins);
 
 // Configuration
 app.engine('ejs', engine);
@@ -93,7 +87,7 @@ app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(bodyParser());
+app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('shhhhh, 1234 secrets inside'));
 app.use(express.session({
