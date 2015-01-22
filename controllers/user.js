@@ -82,4 +82,18 @@ module.exports = function(app) {
             });
         });
     });
+
+    app.get('/users/delete/:id', app.libs.restrictAdmin, function(req, res) {
+        var userId = req.params.id;
+
+        app.factory.users.getById(userId, function(user) {
+            if (user) {
+                user.remove(function() {
+                    res.redirect('/users/list');
+                });
+            } else {
+                res.redirect('/users/list');
+            }
+        });
+    });
 };

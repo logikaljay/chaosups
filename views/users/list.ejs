@@ -56,7 +56,7 @@
                             <li><a href="#resetPassword" class="js-reset" data-toggle="modal" data-id='<%=entity._id%>'>Reset Password</a></li>
                             <li><a href="/users/lock/<%= entity._id %>">Lock</li>
                             <li class="divider"></li>
-                            <li><a href="#" class='danger'>Delete</a></li>
+                            <li><a href="/users/delete/<%=entity._id%>" onclick="return confirm('Are you sure you want to delete this user?');" class='danger'>Delete</a></li>
                         </ul>
                     </li>
                 <% } %>
@@ -91,7 +91,7 @@
                             <li><a href="#resetPassword" class="js-reset" data-toggle="modal" data-id='<%=entity._id%>'>Reset Password</a></li>
                             <li><a href="/users/lock/<%= entity._id %>">Lock</li>
                             <li class="divider"></li>
-                            <li><a href="#" class='danger'>Delete</a></li>
+                            <li><a href="/users/delete/<%=entity._id%>" onclick="return confirm('Are you sure you want to delete this user?');" class='danger'>Delete</a></li>
                         </ul>
                     </li>
                 <% } %>
@@ -129,7 +129,7 @@
                                 </a>
                             </li>
                             <li class="divider"></li>
-                            <li><a href="#" class='danger'>Delete</a></li>
+                            <li><a href="/users/delete/<%=entity._id%>" onclick="return confirm('Are you sure you want to delete this user?');" class='danger'>Delete</a></li>
                         </ul>
                     </li>
                 <% } %>
