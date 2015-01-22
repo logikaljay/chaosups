@@ -31,7 +31,12 @@ module.exports = function(app) {
 
         app.libs.authenticate(user, req.body.password, function(err, user) {
             if (user) {
-                app.libs.addSessionUser(req, user, function() {
+                app.libs.addSessionUser(req, user, function(sessionUser) {
+                    // check if we are sending the session user as a cookie
+                    if (rememberMe) {
+                        res.cookie('user', sessionUser);
+                    }
+
                     // check if we have a destination url
                     if (destinationUrl) {
                         res.redirect(destinationUrl);
