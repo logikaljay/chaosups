@@ -1,3 +1,6 @@
+// ChaosUPS - a universal points system.
+// Copyright (C) 2015  Jay Baker
+
 var mongoose = require('mongoose');
 var async = require('async');
 

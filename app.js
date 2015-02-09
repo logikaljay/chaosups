@@ -1,4 +1,6 @@
-
+// ChaosUPS - a universal points system.
+// Copyright (C) 2015  Jay Baker
+	
 /**
  * Module dependencies.
  */
