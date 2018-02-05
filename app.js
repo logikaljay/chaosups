@@ -95,8 +95,7 @@ app.use(express.cookieParser('shhhhh, 1234 secrets inside'))
 app.use(
   express.session({
     secret: 'shhhh, 1234 secrets inside',
-    store: sessionStore,
-    cookie: { maxAge: 15 * 60 * 1000 }
+    store: sessionStore
   })
 )
 app.use(express.static(path.join(__dirname, 'public')))
