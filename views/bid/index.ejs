@@ -27,7 +27,7 @@
         <input type='hidden' class='js-bid-min' value='<%= item.minimumBid %>' />
         <input type='hidden' class='js-item-id' value='<%= item._id %>' />
         <label for="yourBid" class="control-label">Your bid </label>
-        <input type="text" class="form-control js-item-bid" id="yourBid" placeholder="<%= item.minimumBid %>" />
+        <input type="text" class="form-control js-item-bid" id="yourBid" value="<%= item.minimumBid %>" placeholder="minimum bid: <%= item.minimumBid %>" />
         <p class="help-block">
             <b>Minimum</b> bid is <b><%= item.minimumBid %></b> <%= item.minimumBid == 1 ? "point" : "points" %>
         </p>
