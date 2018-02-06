@@ -101,6 +101,7 @@ app.use(
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(app.router)
 
-app.listen(80, function() {
+var port = process.env.PORT || 3000
+app.listen(port, function() {
   console.log('Express server listening')
 })
