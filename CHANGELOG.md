@@ -1,5 +1,17 @@
 
 <!---
+<div data-major="1" data-minor="1" data-patch="3" data-commit="5223f28" class="release-body commit">
+-->
+
+# v1.1.3
+**jay** released this on *Tue Feb 06 2018 17:26:34 GMT+1300 (NZDT)* - 1 commit makes up this release
+
+## Fixes
+* **Bid:** allow items with multiple bids to close correctly (5223f28)
+
+
+
+<!---
 <div data-major="1" data-minor="1" data-patch="2" data-commit="1388990" class="release-body commit">
 -->
 
