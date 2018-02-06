@@ -6,6 +6,7 @@
             <tr>
                 <th>Item</th>
                 <th>Player</th>
+                <th>Bid</th>
                 <th>Closed</th>
                 <th>Action</th>
             </tr>
@@ -15,6 +16,7 @@
             <tr>
                 <td><%= item.name %></td>
                 <td><%= item.currentBid.user.name %></td>
+                <td><%= item.currentBid.amount %></td>
                 <td><%= moment(item.currentBid.endDate).fromNow() %></td>
                 <td>
                 <ul style='margin:0;padding:0;list-style:none;'>
