@@ -1,5 +1,17 @@
 
 <!---
+<div data-major="1" data-minor="1" data-patch="2" data-commit="1388990" class="release-body commit">
+-->
+
+# v1.1.2
+**jay** released this on *Tue Feb 06 2018 15:17:15 GMT+1300 (NZDT)* - 1 commit makes up this release
+
+## Fixes
+* **Port:** using port from env vars (1388990)
+
+
+
+<!---
 <div data-major="1" data-minor="1" data-patch="1" data-commit="5344286" class="release-body commit">
 -->
 
