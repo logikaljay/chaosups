@@ -1,5 +1,17 @@
 <% layout('../layout') -%>
 
+<%
+function formatDate(duration) {
+    var milliseconds = parseInt((duration%1000)/100)
+            , seconds = parseInt((duration/1000)%60)
+            , minutes = parseInt((duration/(1000*60))%60)
+            , hours = parseInt((duration/(1000*60*60)));
+
+
+        return hours + "h&nbsp;" + minutes + "m&nbsp;" + seconds + "s";
+}
+%>
+
 <% if (points) { %>
     <h3><%= entity.name %>'s points</h3>
     <table class="table table-hover table-striped">
@@ -54,8 +66,7 @@
             <td><%= bid.amount %></td>
             <td><%= bid.item.minimumBid %></td>
             <td>
-                <%= moment(bid.endDate).format("Do MMM HH:mm:ss") %><br />
-                <%= moment(bid.endDate).fromNow() %>
+                <%= formatDate(moment(bid.endDate).diff(moment())) %>
             </td>
             <td>
                 <a class='btn btn-info' href="/items/list/<%= bid.item._id %>">View</a>
