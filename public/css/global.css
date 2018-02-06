@@ -1,0 +1,13 @@
+.items.small.no-hover {
+  font-size: 12px;
+  background: #fff;
+  display: none;
+}
+
+.items.small.no-hover:hover {
+  background: #fff;
+}
+
+.table-fixed-head > thead {
+  background: #fff;
+}

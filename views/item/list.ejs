@@ -1,4 +1,15 @@
 <% layout('../layout') -%>
+<%
+function formatDate(duration) {
+    var milliseconds = parseInt((duration%1000)/100)
+            , seconds = parseInt((duration/1000)%60)
+            , minutes = parseInt((duration/(1000*60))%60)
+            , hours = parseInt((duration/(1000*60*60)));
+
+
+        return hours + "h&nbsp;" + minutes + "m&nbsp;" + seconds + "s";
+}
+%>
 <% if (wonItems && wonItems.length > 0) { %>
     <h3>Won items (unsent)</h3>
     <table class='table table-hover table-striped'>
@@ -27,29 +38,28 @@
 
 <% if (items) { %>
 
-<table class="table table-hover table-striped">
+<table style="background: white;" class="table table-hover table-striped table-fixed-head sortable" data-table-fixed-head-trigger="<%= wonItems && wonItems.length > 0 ? 240 + (wonItems.length * 50) : 100 %>" data-table-fixed-head-top="0">
     <thead>
         <tr>
             <th>Item</th>
             <th>Zone</th>
             <th>Current bid</th>
             <th>Minimum bid</th>
-            <th>You can bid</th>
+            <th data-disablesort='true'>You can bid</th>
             <th>Ending</th>
-            <th>Action</th>
+            <th data-disablesort='true'>Action</th>
         </tr>
     </thead>
     <tbody>
         <% items.forEach(function(item) { %>
-        <tr class='item-<%= item._id %>'>
+        <tr class='item-<%= item._id %> <%= item.currentBid ? "has-bid" : "no-bid" %>'>
             <td><%= item.name %></td>
             <td><%= item.zone %></td>
             <td class='js-bid-currentbid'><%= item.currentBid ? item.currentBid.amount : "N/a" %></td>
             <td class='js-bid-minimumbid'><%= item.minimumBid %></td>
             <td class='js-bid-maximumbid'><%= points[item.zone].available %> (<%= item.zone %>)</td>
-            <td class='js-bid-ending'>
-                <%= item.currentBid ? moment(item.currentBid.endDate).format("Do MMM HH:mm:ss") : "N/a" %><br />
-                <%= item.currentBid ? moment(item.currentBid.endDate).fromNow() : "" %>
+            <td data-value="<%= item.currentBid ? moment(item.currentBid.endDate).diff() / 1000 : 9999999 %>" class='js-bid-ending'>
+                <%= item.currentBid ? formatDate(moment(item.currentBid.endDate).diff()) : "N/a" %>
             <td>
                 <ul style='margin:0;padding:0;list-style:none;'>
                     <li style="float:left;">
