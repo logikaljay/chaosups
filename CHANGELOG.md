@@ -1,5 +1,17 @@
 
 <!---
+<div data-major="1" data-minor="1" data-patch="1" data-commit="5344286" class="release-body commit">
+-->
+
+# v1.1.1
+**jay** released this on *Tue Feb 06 2018 15:14:27 GMT+1300 (NZDT)* - 1 commit makes up this release
+
+## Fixes
+* **Bid:** adding value to minimum bid, adjusting placeholder (5344286)
+
+
+
+<!---
 <div data-major="1" data-minor="1" data-patch="0" data-commit="2f34cbb" class="release-body commit">
 -->
 
