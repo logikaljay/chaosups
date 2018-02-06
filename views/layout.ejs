@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>chaosups</title>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <link rel='stylesheet' href='/css/bootstrap.min.css' />
-        <link rel='stylesheet' href='/css/animate.css' />
-        <link rel='stylesheet' href='/css/bootstrap-tagsinput.css' />
-        <script type='text/javascript' src='/js/jquery-1.11.2.min.js'></script>
-    </head>
-    <body>
-        <div class='container'>
-            <p>&nbsp;</p>
-            <%- include partials/nav.ejs %>
+
+<head>
+    <title>chaosups</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <link rel='stylesheet' href='/css/bootstrap.min.css' />
+    <link rel='stylesheet' href='/css/animate.css' />
+    <link rel='stylesheet' href='/css/bootstrap-tagsinput.css' />
+    <link rel='stylesheet' href='/css/bootstrap-sortable.css' />
+    <link rel='stylesheet' href='/css/global.css' />
+    <script type='text/javascript' src='/js/jquery-1.11.2.min.js'></script>
+    <script type='text/javascript' src='/js/jquery.michiweber.table-head-fixed.min.js'></script>
+    
+    <!-- <script text='text/javascript' src="/js/countdown.min.js"></script>
+    <script text='text/javascript' src="/js/moment-countdown.min.js"></script> -->
+</head>
+
+<body>
+    <div class='container'>
+        <p>&nbsp;</p>
+        <%- include partials/nav.ejs %>
             <%- body %>
-        </div>
-        <script type='text/javascript' src='/js/bootstrap.min.js'></script>
-        <script type='text/javascript' src='/js/bootstrap-tagsinput.js'></script>
-        <script type='text/javascript' src='/js/typeahead.bundle.js'></script>
-    </body>
+    </div>
+    <script type='text/javascript' src='/js/bootstrap.min.js'></script>
+    <script type='text/javascript' src='/js/bootstrap-tagsinput.js'></script>
+    <script text='text/javascript' src="/js/bootstrap-sortable.js"></script>
+    <script type='text/javascript' src='/js/typeahead.bundle.js'></script>
+</body>
+
 </html>
