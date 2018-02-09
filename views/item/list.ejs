@@ -34,11 +34,19 @@ function formatDate(duration) {
     </table>
 <% } %>
 
+<table class="table pull-right" style="width: 120px">
+    <thead>
+        <tr><th>Legend</th></tr>
+    </thead>
+    <tr class="warning"><td>24 hour bid</td></tr>
+    <tr class="info"><td>72 hour bid</td></tr>
+</table>
+
 <h3>Approved items</h3>
 
 <% if (items) { %>
 
-<table style="background: white;" class="table table-hover table-striped table-fixed-head sortable" data-table-fixed-head-trigger="<%= wonItems && wonItems.length > 0 ? 240 + (wonItems.length * 50) : 100 %>" data-table-fixed-head-top="0">
+<table style="background: white;" class="table table-hover table-striped table-fixed-head sortable" data-table-fixed-head-trigger="<%= wonItems && wonItems.length > 0 ? 290 + (wonItems.length * 50) : 140 %>" data-table-fixed-head-top="0">
     <thead>
         <tr>
             <th>Item</th>
@@ -52,7 +60,7 @@ function formatDate(duration) {
     </thead>
     <tbody>
         <% items.forEach(function(item) { %>
-        <tr class='item-<%= item._id %> <%= item.currentBid ? "has-bid" : "no-bid" %>'>
+        <tr class='item-<%= item._id %> <%= item.currentBid ? "has-bid" : "no-bid" %> <%= item.date <= moment().subtract(3, "d") ? "warning" : "info" %>'>
             <td><%= item.name %></td>
             <td><%= item.zone %></td>
             <td class='js-bid-currentbid'><%= item.currentBid ? item.currentBid.amount : "N/a" %></td>

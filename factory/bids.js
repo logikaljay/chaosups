@@ -135,6 +135,11 @@ module.exports = function(app) {
           })
         })
       } else {
+        var endDate = app.locals.moment().add(3, 'd')
+        if (item.date <= app.locals.moment().subtract('3', 'd')) {
+          endDate = app.locals.moment().add(1, 'd')
+        }
+
         // create a new bid
         var newBid = new Bid({
           item: item,
@@ -142,7 +147,7 @@ module.exports = function(app) {
           amount: value,
           zone: item.zone,
           state: 0,
-          endDate: app.locals.moment().add(3, 'd')
+          endDate: endDate
         })
 
         newBid.save(function(err) {
