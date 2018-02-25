@@ -1,5 +1,17 @@
 
 <!---
+<div data-major="1" data-minor="2" data-patch="0" data-commit="c51311a" class="release-body commit">
+-->
+
+# v1.2.0
+**jay** released this on *Fri Feb 09 2018 21:32:11 GMT+1300 (NZDT)* - 1 commit makes up this release
+
+## Features
+* **Items:** adding shorter bid times for older items (c51311a)
+
+
+
+<!---
 <div data-major="1" data-minor="1" data-patch="3" data-commit="5223f28" class="release-body commit">
 -->
 
