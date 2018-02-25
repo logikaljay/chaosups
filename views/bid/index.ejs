@@ -21,9 +21,9 @@
     <% } %>
     </div>
 
-    <% if (item.minimumBid <= points[item.zone].available) { %>
+    <% if (item.minimumBid <= points[item.zone].available || user.toLowerCase() === 'clanshop') { %>
     <div class="form-group">
-        <input type='hidden' class='js-bid-max' value='<%= points[item.zone].available %>' />
+        <input type='hidden' class='js-bid-max' value='<%= user.toLowerCase() === "clanshop" ? 999 : points[item.zone].available %>' />
         <input type='hidden' class='js-bid-min' value='<%= item.minimumBid %>' />
         <input type='hidden' class='js-item-id' value='<%= item._id %>' />
         <label for="yourBid" class="control-label">Your bid </label>
@@ -41,7 +41,7 @@
 
 </div>
 <div class="modal-footer">
-    <% if (item.minimumBid <= points[item.zone].available) { %>
+    <% if (item.minimumBid <= points[item.zone].available || user.toLowerCase() === 'clanshop') { %>
         <button type="button" class="btn btn-primary btn-info js-place-bid" data-loading-text="Place bid <i class='glyphicon glyphicon-refresh glyphicon-refresh-animate'></i>" data-complete-text="Success <i class='glyphicon glyphicon-ok'></i>" data-failed-text="Failed <i class='glyphicon glyphion-remove'></i>">
             Place bid
         </button>
@@ -103,6 +103,7 @@
                     // update parent item
                     updateItem(currentBid, itemId, data.data.minimumBid, data.data.maximumBid, data.data.endDate, data.data.endDate_from);
                 } else {
+                    console.log(data.message)
                     // show error
                     showError($this, data.message)
                 }
