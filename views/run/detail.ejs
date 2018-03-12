@@ -1,17 +1,76 @@
 <% layout('../layout') -%>
 
-<h2><%= run.leader.name %>'s <%= run.zone %> run</h2>
+<h2><%= run.leader.name %>'s <%= run.zone.toLowerCase() %> run</h2>
+
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td><a href="/run/detail/<%= run.id %>"><%= run.id %></a></td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>
+                    <%= moment(run.date).fromNow() %>
+                    (<%= moment(run.date).format('DD/MM/YYYY HH:mm:SS') %>)
+                </td>
+            </tr>
+            <tr>
+                <th>Leader</th>
+                <td><%= run.leader.name %></td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <% if (run.state === 0) { %>
+                    <td style="color: green;">Approved</td>
+                <% } else { %> 
+                    <td style="color: red;">Unapproved</td>
+                <% } %>
+            </tr>
+            <tr>
+                <th>Players</th>
+                <td><%= run.points.length %> - <%= run.points.map(point => point.user.name).join(', ') %></td>
+            </tr>
+            <tr>
+                <th>Items</th>
+                <td><%= run.items.length || 0 %></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <% if (run.days.length > 0) { %>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th width="88%">Day</th>
+                <th width="12%">Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% run.days.forEach(function(day) { %>
+                <tr>
+                    <td>
+                        <%= run.zone %> -
+                            <%= day.name %>
+                    </td>
+                    <td>
+                        <%= day.amount %>
+                    </td>
+                </tr>
+                <% }); %>
+        </tbody>
+    </table>
+    <% } %>
 
 <%
 var i = 0;
 %>
-<h3>Players</h2>
 
 <table class="table table-hover table-striped">
     <thead>
         <tr>
-            <th>Player</th>
-            <th>Points</th>
+            <th width="88%">Player</th>
+            <th width="12%">Points</th>
         </tr>
     </thead>
     <tbody>
@@ -37,9 +96,9 @@ i = 0;
 <table class="table table-hover table-striped">
     <thead>
         <tr>
-            <th>Item</th>
-            <th>Value</th>
-            <th>Action</th>
+            <th width="88%">Item</th>
+            <th width="6%">Value</th>
+            <th width="6%">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -53,7 +112,7 @@ i = 0;
                 </td>
                 <td>
                     <% if (run.state == 0) { %>
-                        <a href="/items/list/<%= item._id %>" class="btn btn-info">View</a>
+                        <a href="/items/list/<%= item._id %>" class="btn btn-sm btn-info">View</a>
                     <% } %>
                 </td>
             </tr>

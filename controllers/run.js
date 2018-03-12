@@ -202,7 +202,7 @@ module.exports = function(app) {
     run.items = req.body.item || []
     run.leader = req.session.user.name
 
-    run.runDays = req.days
+    run.runDays = run.days
     run.runUsers = []
     run.runItems = []
     run.runPoints = []

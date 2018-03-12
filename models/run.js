@@ -9,7 +9,7 @@ module.exports = function(app) {
     var runSchema = new Schema({
         state: Number,
         zone: String,
-        days: String,
+        days: [],
         leader: { type: Schema.Types.ObjectId, ref: 'User' },
         points: [{ type: Schema.Types.ObjectId, ref: 'Point' }],
         items: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
